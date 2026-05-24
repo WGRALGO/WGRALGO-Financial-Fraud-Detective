@@ -1,0 +1,13 @@
+{
+  "appId": "org.wgralgo.financialfrauddetective",
+  "appName": "Financial Fraud Detective",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#000000",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    }
+  }
+}

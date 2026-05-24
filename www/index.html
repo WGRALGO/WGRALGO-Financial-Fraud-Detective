@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#000000" />
+<title>Financial Fraud Detective</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    color: #fdfaf0;
+    min-height: 100vh;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+</style>
+</head>
+<body>
+<!-- =============== FINANCIAL FRAUD DETECTIVE™ GAME (100-CASE POOL, RANDOM 10) =============== -->
+<!-- Drop this into a WordPress Elementor HTML widget -->
+
+<style>
+  :root {
+    --gold: #d4af37;
+    --gold-soft: #f5e4b3;
+    --text: #fdfaf0;
+    --bg: #050505;
+    --card-bg: #111111;
+    --accent-red: #ff6b6b;
+    --accent-green: #5ad18a;
+  }
+
+  .wgra-fraud-game-wrapper {
+    width: 100%;
+    background: radial-gradient(circle at top, #181818 0%, var(--bg) 60%);
+    padding: 40px 16px 70px;
+    box-sizing: border-box;
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .wgra-fraud-game {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(7,7,7,0.96);
+    border-radius: 18px;
+    border: 1px solid rgba(212,175,55,0.45);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+    padding: 26px 18px 30px;
+  }
+
+  @media (min-width: 768px) {
+    .wgra-fraud-game {
+      padding: 32px 32px 36px;
+    }
+  }
+
+  .wgra-fraud-header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .wgra-fraud-kicker {
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 6px;
+  }
+
+  .wgra-fraud-title {
+    font-size: 26px;
+    line-height: 1.3;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .wgra-fraud-subtitle {
+    max-width: 640px;
+    margin: 0 auto;
+    font-size: 14px;
+    color: rgba(253,250,240,0.9);
+  }
+
+  .wgra-fraud-tagline-bar {
+    margin: 18px auto 10px;
+    max-width: 740px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 0 0, rgba(212,175,55,0.22), transparent 60%);
+    border: 1px solid rgba(212,175,55,0.6);
+    font-size: 12px;
+    color: #fff8e3;
+  }
+
+  .wgra-fraud-main {
+    display: grid;
+    grid-template-columns: 2fr 1.25fr;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 840px) {
+    .wgra-fraud-main {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .wgra-fraud-panel {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid rgba(212,175,55,0.35);
+    padding: 18px 16px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wgra-fraud-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(212,175,55,0.12), transparent 60%);
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  .wgra-fraud-panel-inner {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* INTRO PANEL */
+  .wgra-fraud-intro-title {
+    font-size: 18px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 8px;
+  }
+
+  .wgra-fraud-intro-text {
+    font-size: 14px;
+    color: rgba(253,250,240,0.9);
+    margin-bottom: 10px;
+  }
+
+  .wgra-fraud-intro-list {
+    font-size: 13px;
+    color: rgba(253,250,240,0.9);
+    margin: 6px 0 12px 14px;
+    padding-left: 8px;
+  }
+
+  .wgra-fraud-intro-list li {
+    margin-bottom: 3px;
+  }
+
+  .wgra-fraud-start-hint {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    color: #fbe79a;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  .wgra-fraud-start-btn {
+    display: block;
+    margin: 14px auto 0;
+    font-size: 15px;
+    padding: 12px 28px;
+    max-width: 260px;
+    text-align: center;
+    background: linear-gradient(120deg, #ffdf7a, #fbe79a, #d4af37);
+    color: #1b1303;
+    border-radius: 999px;
+    border: 2px solid rgba(245,210,106,0.95);
+    box-shadow:
+      0 0 0 2px rgba(0,0,0,0.9),
+      0 10px 26px rgba(0,0,0,0.85);
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .wgra-fraud-start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 2px rgba(0,0,0,0.9),
+      0 14px 30px rgba(0,0,0,0.95);
+  }
+
+  /* GAME PANEL LEFT */
+  .wgra-fraud-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .wgra-fraud-pill {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(212,175,55,0.6);
+    background: rgba(10,10,10,0.9);
+    color: var(--gold-soft);
+  }
+
+  .wgra-fraud-case-count {
+    font-size: 12px;
+    color: rgba(253,250,240,0.9);
+  }
+
+  .wgra-fraud-case-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 6px 0 4px;
+    color: #fff9e4;
+  }
+
+  .wgra-fraud-case-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(253,250,240,0.95);
+  }
+
+  .wgra-fraud-case-clues {
+    font-size: 13px;
+    margin-top: 10px;
+    padding-left: 16px;
+    color: rgba(253,250,240,0.9);
+  }
+
+  .wgra-fraud-case-clues li {
+    margin-bottom: 4px;
+  }
+
+  .wgra-fraud-button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .wgra-fraud-btn {
+    flex: 1 1 140px;
+    min-width: 0;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(212,175,55,0.8);
+    background: rgba(12,12,12,0.96);
+    color: #fdfaf0;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.75);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .wgra-fraud-btn-yes {
+    border-color: rgba(255,107,107,0.9);
+    background: radial-gradient(circle at 0 0, rgba(255,107,107,0.25), rgba(10,0,0,0.96));
+  }
+
+  .wgra-fraud-btn-no {
+    border-color: rgba(90,209,138,0.9);
+    background: radial-gradient(circle at 0 0, rgba(90,209,138,0.22), rgba(0,10,5,0.96));
+  }
+
+  .wgra-fraud-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 16px rgba(0,0,0,0.85);
+  }
+
+  .wgra-fraud-btn:disabled {
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .wgra-fraud-next-row {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .wgra-fraud-next-btn {
+    flex: 0 0 auto;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(212,175,55,0.9);
+    background: linear-gradient(120deg, #8b6a1a, var(--gold), var(--gold-soft));
+    color: #1b1303;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.8);
+    transition: transform 0.16s, box-shadow 0.16s, opacity 0.16s;
+    text-decoration: none;
+  }
+
+  .wgra-fraud-next-btn:hover:enabled {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.9);
+  }
+
+  .wgra-fraud-next-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+    box-shadow: none;
+  }
+
+  @media (max-width: 640px) {
+    .wgra-fraud-btn {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      padding: 9px 10px;
+    }
+    .wgra-fraud-next-btn {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      padding: 7px 14px;
+    }
+  }
+
+  .wgra-fraud-progress-wrap {
+    margin-top: 10px;
+  }
+
+  .wgra-fraud-progress-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(40,40,40,0.9);
+    overflow: hidden;
+  }
+
+  .wgra-fraud-progress-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #8b6a1a, var(--gold), var(--gold-soft));
+    transition: width 0.3s ease;
+  }
+
+  .wgra-fraud-progress-label {
+    font-size: 11px;
+    margin-top: 4px;
+    color: rgba(253,250,240,0.82);
+  }
+
+  .wgra-fraud-score-header {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 6px;
+  }
+
+  .wgra-fraud-score-main {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fffbe5;
+    margin-bottom: 4px;
+  }
+
+  .wgra-fraud-score-sub {
+    font-size: 13px;
+    color: rgba(253,250,240,0.8);
+    margin-bottom: 10px;
+  }
+
+  .wgra-fraud-feedback-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  .wgra-fraud-feedback-tag.correct {
+    background: rgba(90,209,138,0.22);
+    color: var(--accent-green);
+    border: 1px solid rgba(90,209,138,0.9);
+  }
+
+  .wgra-fraud-feedback-tag.wrong {
+    background: rgba(255,107,107,0.18);
+    color: var(--accent-red);
+    border: 1px solid rgba(255,107,107,0.9);
+  }
+
+  .wgra-fraud-feedback-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #fff9e3;
+  }
+
+  .wgra-fraud-feedback-body {
+    font-size: 13px;
+    color: rgba(253,250,240,0.92);
+    margin-bottom: 8px;
+  }
+
+  .wgra-fraud-feedback-list {
+    font-size: 13px;
+    color: rgba(253,250,240,0.92);
+    margin-left: 16px;
+    padding-left: 6px;
+  }
+
+  .wgra-fraud-feedback-list li {
+    margin-bottom: 3px;
+  }
+
+  .wgra-fraud-summary {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(212,175,55,0.35);
+    font-size: 13px;
+    color: rgba(253,250,240,0.85);
+  }
+
+  .wgra-fraud-summary-btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .wgra-fraud-summary-btn {
+    flex: 0 0 auto;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(212,175,55,0.75);
+    background: rgba(12,12,12,0.96);
+    color: var(--gold-soft);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    cursor: pointer;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.75);
+    transition: transform 0.16s, box-shadow 0.16s, background 0.16s;
+    text-decoration: none;
+  }
+
+  .wgra-fraud-summary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 16px rgba(0,0,0,0.85);
+  }
+
+  .wgra-fraud-results-list {
+    margin-top: 10px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .wgra-fraud-result-item {
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(212,175,55,0.25);
+  }
+
+  .wgra-fraud-result-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fffbe5;
+  }
+
+  .wgra-fraud-result-pill {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+
+  .wgra-fraud-result-pill.correct {
+    background: var(--accent-green);
+  }
+
+  .wgra-fraud-result-pill.wrong {
+    background: var(--accent-red);
+  }
+
+  .wgra-fraud-result-meta {
+    font-size: 11px;
+    color: rgba(253,250,240,0.8);
+    margin-top: 2px;
+  }
+
+  .wgra-fraud-result-meta span {
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  @media (max-width: 640px) {
+    .wgra-fraud-results-list {
+      max-height: 220px;
+    }
+  }
+
+  .wgra-fraud-hidden {
+    display: none !important;
+  }
+</style>
+
+<div class="wgra-fraud-game-wrapper" id="financial-fraud-detective-game">
+  <div class="wgra-fraud-game">
+
+    <div class="wgra-fraud-header">
+      <div class="wgra-fraud-kicker">Digital Safety Lab</div>
+      <h2 class="wgra-fraud-title">Financial Fraud Detective™</h2>
+      <p class="wgra-fraud-subtitle">
+        You’re the detective. Read each money situation, study the clues, and decide:
+        is this <strong>Fraud</strong> or does it look <strong>Legit</strong>? Each case reveals red flags
+        that protect your wallet, your credit, and your peace of mind.
+      </p>
+      <div class="wgra-fraud-tagline-bar">
+        Part of The Wealth Gap Resolution Algorithm™ Inc. — helping families stay three steps ahead of scammers.
+      </div>
+    </div>
+
+    <div class="wgra-fraud-main">
+
+      <!-- LEFT PANEL -->
+      <div class="wgra-fraud-panel">
+        <div class="wgra-fraud-panel-inner" id="wgra-fraud-left-panel">
+
+          <!-- INTRO -->
+          <div id="wgra-fraud-intro-panel">
+            <div class="wgra-fraud-intro-title">How the game works</div>
+            <p class="wgra-fraud-intro-text">
+              You’ll see a series of real-world style money situations — texts, calls,
+              “opportunities,” and messages that people receive every day.
+            </p>
+            <ul class="wgra-fraud-intro-list">
+              <li><strong>Step 1:</strong> Read the case description and clues.</li>
+              <li><strong>Step 2:</strong> Decide if it’s a <strong>fraud attempt</strong> or a <strong>legit situation</strong>.</li>
+              <li><strong>Step 3:</strong> Get instant feedback, red flags, and tips.</li>
+            </ul>
+            <p class="wgra-fraud-intro-text">
+              You’ll get a mix of beginner, intermediate, and advanced cases —
+              from fake “Zelle® support” to sketchy investment “guarantees.”
+            </p>
+            <div class="wgra-fraud-start-hint">Tap Start to begin your first case</div>
+            <button type="button" class="wgra-fraud-start-btn" id="wgra-fraud-start-btn">
+              Start Detecting Fraud
+            </button>
+          </div>
+
+          <!-- CASE PANEL -->
+          <div id="wgra-fraud-case-panel" class="wgra-fraud-hidden">
+            <div class="wgra-fraud-meta-row">
+              <div class="wgra-fraud-pill" id="wgra-fraud-difficulty-pill">Beginner Case</div>
+              <div class="wgra-fraud-pill" id="wgra-fraud-type-pill">Text / Message</div>
+              <div class="wgra-fraud-case-count" id="wgra-fraud-case-count">
+                Case 1 of 10
+              </div>
+            </div>
+
+            <div class="wgra-fraud-case-title" id="wgra-fraud-case-title">
+              A strange text about your bank account
+            </div>
+            <div class="wgra-fraud-case-text" id="wgra-fraud-case-text"></div>
+            <ul class="wgra-fraud-case-clues" id="wgra-fraud-case-clues"></ul>
+
+            <div class="wgra-fraud-button-row">
+              <button type="button" class="wgra-fraud-btn wgra-fraud-btn-yes"
+                      id="wgra-fraud-btn-fraud">
+                This is Fraud
+              </button>
+              <button type="button" class="wgra-fraud-btn wgra-fraud-btn-no"
+                      id="wgra-fraud-btn-legit">
+                Looks Legit
+              </button>
+            </div>
+
+            <div class="wgra-fraud-next-row">
+              <button type="button" class="wgra-fraud-next-btn" id="wgra-fraud-next-btn" disabled>
+                Next Case
+              </button>
+            </div>
+
+            <div class="wgra-fraud-progress-wrap">
+              <div class="wgra-fraud-progress-track">
+                <div class="wgra-fraud-progress-bar" id="wgra-fraud-progress-bar"></div>
+              </div>
+              <div class="wgra-fraud-progress-label" id="wgra-fraud-progress-label">
+                0 of 10 cases completed
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="wgra-fraud-panel">
+        <div class="wgra-fraud-panel-inner" id="wgra-fraud-right-panel">
+
+          <div class="wgra-fraud-score-header">Scoreboard</div>
+          <div class="wgra-fraud-score-main" id="wgra-fraud-score-main">
+            0 / 0 correct
+          </div>
+          <div class="wgra-fraud-score-sub" id="wgra-fraud-score-sub">
+            Start the game to begin tracking your detective score.
+          </div>
+
+          <div id="wgra-fraud-feedback-block" class="wgra-fraud-hidden">
+            <div class="wgra-fraud-feedback-tag" id="wgra-fraud-feedback-tag"></div>
+            <div class="wgra-fraud-feedback-title" id="wgra-fraud-feedback-title"></div>
+            <div class="wgra-fraud-feedback-body" id="wgra-fraud-feedback-body"></div>
+            <ul class="wgra-fraud-feedback-list" id="wgra-fraud-feedback-redflags"></ul>
+          </div>
+
+          <div id="wgra-fraud-summary" class="wgra-fraud-summary wgra-fraud-hidden">
+            <div id="wgra-fraud-summary-text"></div>
+
+            <div id="wgra-fraud-results-list" class="wgra-fraud-results-list"></div>
+
+            <div class="wgra-fraud-summary-btn-row">
+              <button type="button" class="wgra-fraud-summary-btn" id="wgra-fraud-restart-btn">
+                Play Again
+              </button>
+              <a href="/contact" class="wgra-fraud-summary-btn">
+                Request a Workshop
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const TOTAL_CASES_PER_GAME = 10;
+
+  /* =========================
+     BASE CASES (25 patterns)
+     ========================= */
+  const BASE_CASES = [
+    {
+      difficulty: "Beginner",
+      type: "Text / Message",
+      title: "“Urgent: Zelle® transfer problem”",
+      scenario: "You get a text: \"URGENT: Your recent Zelle® transfer failed. Click here to re-verify your account or your bank access will be locked in 30 minutes\" with a link that does NOT match your bank’s website.",
+      clues: [
+        "The message is threatening: \"your access will be locked in 30 minutes.\"",
+        "The link doesn’t match your bank’s official website address.",
+        "You didn’t just try to send a Zelle® payment."
+      ],
+      correct: "fraud",
+      explanation: "Real banks and Zelle® do not threaten to shut down your account through random text links. This is a classic phishing attempt to steal logins or access to your account.",
+      redFlags: [
+        "Urgent time limit to scare you into reacting quickly.",
+        "Link that looks different from your real bank URL.",
+        "You didn’t start the action they’re talking about."
+      ]
+    },
+    {
+      difficulty: "Beginner",
+      type: "Phone Call",
+      title: "“This is the IRS – pay now or go to jail”",
+      scenario: "Someone calls saying they are from the IRS, claiming you owe back taxes. They say you must pay immediately over the phone with gift cards or you will be arrested.",
+      clues: [
+        "Demanding payment on the spot over the phone.",
+        "Insisting on gift cards as the only payment method.",
+        "Threatening jail if you don’t pay immediately."
+      ],
+      correct: "fraud",
+      explanation: "Government agencies like the IRS do not call demanding immediate payment by gift card, nor do they threaten arrest over the phone like this.",
+      redFlags: [
+        "Pressure, fear, and threats of arrest.",
+        "Weird payment methods like gift cards or crypto.",
+        "Refusal to let you hang up and call back through an official number."
+      ]
+    },
+    {
+      difficulty: "Beginner",
+      type: "Email",
+      title: "“Your bank statement is ready”",
+      scenario: "You receive an email from your bank’s exact domain name, with your real name and the last four digits of your account. It tells you your monthly statement is ready and to log in through the bank’s regular website or mobile app.",
+      clues: [
+        "No login link — they tell you to log in the usual way.",
+        "The sender’s email matches your bank’s official domain.",
+        "No requests for personal details, just an informational notice."
+      ],
+      correct: "legit",
+      explanation: "This looks like a standard account notice with no pressure, no strange links, and no request for sensitive info. Typing your bank’s URL manually is still safest.",
+      redFlags: []
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Social Media DM",
+      title: "“Instant credit repair for a one-time fee”",
+      scenario: "A stranger messages you on social media saying they are a \"credit specialist\" who can wipe negative items from your report in 24 hours for a one-time $300 fee paid by Cash App.",
+      clues: [
+        "Guarantees unrealistic results in 24 hours.",
+        "Demands payment upfront through a person-to-person app.",
+        "No business name, website, or written contract."
+      ],
+      correct: "fraud",
+      explanation: "Legitimate credit services cannot legally promise to erase accurate negative information overnight, especially via DMs and Cash App only.",
+      redFlags: [
+        "Unrealistic promise: clean credit in 24 hours.",
+        "Upfront fee with no contract or disclosures.",
+        "No way to verify licenses, location, or reputation."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Online Marketplace",
+      title: "“Overpayment for your online sale”",
+      scenario: "You sell a used laptop online for $300. The buyer mails a check for $1,500 and says, \"Deposit this, keep an extra $100, and send the rest back using a money transfer app.\"",
+      clues: [
+        "Check is much larger than the sale price.",
+        "They want money back before the check fully clears.",
+        "They try to reward you for helping with the “mistake”."
+      ],
+      correct: "fraud",
+      explanation: "This is an overpayment scam. The check will bounce later, but the money you send out will be gone for good.",
+      redFlags: [
+        "Unnecessary overpayment with a request to send money back.",
+        "Pressure to move funds before the bank confirms the check.",
+        "Overcomplicated story for a simple sale."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Job Offer",
+      title: "“Work-from-home check deposit job”",
+      scenario: "You get hired quickly for a remote job. On day one, they mail you a check and tell you to deposit it, keep a small amount, and send the rest to vendors using Zelle® and gift cards.",
+      clues: [
+        "No interview or real screening process.",
+        "You’re asked to move money using personal accounts.",
+        "Payment is sent before any real work is done."
+      ],
+      correct: "fraud",
+      explanation: "This is a money-mule scam. They are using your bank account to move stolen or fake funds. You can be left owing the bank money or facing legal trouble.",
+      redFlags: [
+        "Job duties focus on moving money, not actual tasks.",
+        "They insist on quick transfers before checks clear.",
+        "Everything happens fast with little paperwork."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Investment Pitch",
+      title: "“Guaranteed 20% return every week”",
+      scenario: "A contact says they’re in a private investment group that \"guarantees 20% profit every week\" if you send crypto to a wallet. They show screenshots of big returns but no official statements.",
+      clues: [
+        "Promise of guaranteed, very high returns.",
+        "They want crypto, which is hard to reverse.",
+        "No independent documentation or regulation details."
+      ],
+      correct: "fraud",
+      explanation: "Any investment that \"guarantees\" huge returns with no risk and no documentation is almost certainly a scam.",
+      redFlags: [
+        "Guaranteed profits and double-digit weekly returns.",
+        "No audited statements or licensed advisor.",
+        "Strong FOMO pressure: \"don’t miss out\"."
+      ]
+    },
+    {
+      difficulty: "Beginner",
+      type: "In-Person Purchase",
+      title: "“Using your debit card at a grocery store”",
+      scenario: "You use your debit card at your regular grocery store, at the same chip reader you’ve used for years. The cashier doesn’t ask for anything extra beyond your PIN or tap-to-pay.",
+      clues: [
+        "Familiar store and checkout process.",
+        "No one asks for your PIN verbally or for your banking login.",
+        "You initiated the transaction at the register."
+      ],
+      correct: "legit",
+      explanation: "Everyday card use at a known business, with normal checkout steps, is typically legitimate. Still, cover your PIN and watch statements.",
+      redFlags: []
+    },
+    {
+      difficulty: "Advanced",
+      type: "Email & Website",
+      title: "“Subtle fake bank login page”",
+      scenario: "You receive an email that looks like it’s from your bank saying, \"We’ve updated our terms. Please log in to review.\" The link domain is \"mybank-security.com\" instead of your bank’s official domain, but the page design looks identical.",
+      clues: [
+        "The domain is slightly different from your real bank URL.",
+        "The email pushes you to click the link instead of telling you to log in the normal way.",
+        "The timing is unexpected."
+      ],
+      correct: "fraud",
+      explanation: "This is a phishing site designed to steal your login. Even small differences in the web address are a major red flag.",
+      redFlags: [
+        "Look-alike domain name with extra words or dashes.",
+        "Email urges clicking instead of going to your usual URL.",
+        "No other alerts or verification from the bank."
+      ]
+    },
+    {
+      difficulty: "Advanced",
+      type: "Romance",
+      title: "“Online partner asking for a wire transfer”",
+      scenario: "You’ve been messaging someone for months who says they live overseas. They now claim there’s an emergency surgery and ask you to wire $4,000 because their accounts are frozen. They promise to pay you back once they access their \"inheritance.\"",
+      clues: [
+        "You have never met them in person.",
+        "The emergency appears when they ask for money.",
+        "They ask for a large wire transfer to a foreign account."
+      ],
+      correct: "fraud",
+      explanation: "This matches a common romance scam pattern. Scammers build emotional trust, then create a crisis to get large sums of money.",
+      redFlags: [
+        "Relationship exists only online.",
+        "Dramatic crisis tied to a big money request.",
+        "Vague future repayment from \"inheritance\" or \"frozen funds\"."
+      ]
+    },
+    {
+      difficulty: "Advanced",
+      type: "Business Email",
+      title: "“Vendor changing bank details by email only”",
+      scenario: "Your small business receives an email that appears to be from a regular vendor, saying their bank account has changed and to send all future payments to a new account number. The email address has one letter different from the usual.",
+      clues: [
+        "Bank details are changing with no phone call or official letter.",
+        "The sender’s email is almost the same, but slightly off.",
+        "They insist you use the new details for the very next payment."
+      ],
+      correct: "fraud",
+      explanation: "Business email compromise scammers impersonate vendors and quietly change payment instructions to steal funds.",
+      redFlags: [
+        "Subtle changes in the email address.",
+        "Sensitive changes sent only by email.",
+        "Urgency to use the new account immediately."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Debt Collection",
+      title: "“Debt collector willing to send validation”",
+      scenario: "You receive a call from a debt collector. When you ask for written validation of the debt, they agree and say they will mail a letter and do not pressure you to pay on the spot.",
+      clues: [
+        "They agree to send written validation.",
+        "No demand for immediate payment or unusual methods.",
+        "They don’t threaten arrest or violence."
+      ],
+      correct: "legit",
+      explanation: "While not all collectors behave well, a collector who sends validation and skips pressure tactics is behaving more like a legitimate agency. You still have the right to dispute.",
+      redFlags: []
+    },
+    {
+      difficulty: "Beginner",
+      type: "Text / Message",
+      title: "“You’ve won a gift card you never entered for”",
+      scenario: "You get a text saying you’ve won a $500 store gift card, even though you don’t remember entering any contest. They want you to click a link and type in your card number \"to claim the prize.\"",
+      clues: [
+        "You don’t remember entering a contest.",
+        "They ask for card details to claim a prize.",
+        "Pressure to click a random link."
+      ],
+      correct: "fraud",
+      explanation: "\"You’ve won\" messages that ask for card info are usually phishing or prize scams.",
+      redFlags: [
+        "Unsolicited prize with no entry.",
+        "Requests for payment card or bank info.",
+        "Random link instead of official site."
+      ]
+    },
+    {
+      difficulty: "Beginner",
+      type: "Utility Bill",
+      title: "“Power company calling about a late bill”",
+      scenario: "Someone calls claiming to be from your electric company, saying your bill is one month late and asking you to log in online or call the number printed on your last paper bill to pay.",
+      clues: [
+        "They don’t ask for payment over the phone.",
+        "They direct you to your usual bill or website.",
+        "No threats of arrest, just a reminder."
+      ],
+      correct: "legit",
+      explanation: "Legit companies often send reminders, but directing you to the normal payment channel (not a strange link or gift cards) is a good sign.",
+      redFlags: []
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Grant / Scholarship",
+      title: "“Guaranteed government grant if you pay a fee”",
+      scenario: "A caller says you qualify for a \"free government grant\" but must first pay a $150 \"processing fee\" with prepaid cards to release the funds.",
+      clues: [
+        "They say the grant is guaranteed.",
+        "They demand a fee up front with prepaid cards.",
+        "No application, documents, or official website."
+      ],
+      correct: "fraud",
+      explanation: "Government grants do not require upfront fees paid on prepaid cards.",
+      redFlags: [
+        "Upfront \"processing\" or \"release\" fees.",
+        "Payment by prepaid or gift cards.",
+        "No written paperwork or official site."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Rental / Housing",
+      title: "“Landlord wants deposit in gift cards”",
+      scenario: "A landlord says you must pay your security deposit and first month’s rent using gift cards before you can see the apartment.",
+      clues: [
+        "Payment requested before a tour or lease.",
+        "Gift cards instead of normal rent methods.",
+        "Refuses to meet in person first."
+      ],
+      correct: "fraud",
+      explanation: "Legitimate landlords don’t demand rent in gift cards, especially before a viewing or signed lease.",
+      redFlags: [
+        "Unusual payment methods for rent.",
+        "No in-person meeting or lease.",
+        "Pressure to pay quickly or lose the unit."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Cash App / P2P",
+      title: "“Cash App flip – send $100, get $1,000”",
+      scenario: "On social media, someone advertises a \"Cash App flip\" where you send them $100 and they send back $1,000. They post screenshots of big payouts.",
+      clues: [
+        "Promise to multiply your money instantly.",
+        "They want person-to-person payments.",
+        "No business name or license."
+      ],
+      correct: "fraud",
+      explanation: "Cash App flips are classic scams. Once you send money, it’s usually gone.",
+      redFlags: [
+        "Too-good-to-be-true returns.",
+        "No explanation of how it works.",
+        "Only proof is screenshots."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Charity",
+      title: "“Charity call after a disaster”",
+      scenario: "Right after a natural disaster, someone calls asking for donations for \"relief\" but can’t clearly state the charity’s full name or website. They ask for card details over the phone.",
+      clues: [
+        "Can’t clearly identify the organization.",
+        "Pressure to give card numbers immediately.",
+        "No option to donate through a known site."
+      ],
+      correct: "fraud",
+      explanation: "Scammers often use disasters to collect money using fake charity names.",
+      redFlags: [
+        "Vague organization identity.",
+        "Immediate pressure for card details.",
+        "No official website or registration."
+      ]
+    },
+    {
+      difficulty: "Beginner",
+      type: "Bank ATM",
+      title: "“Withdrawing cash at your bank’s ATM”",
+      scenario: "You withdraw cash from an ATM attached to your normal bank branch, during business hours, and no one is hovering nearby.",
+      clues: [
+        "Official bank ATM at a branch.",
+        "No one watching you closely.",
+        "You initiated the transaction."
+      ],
+      correct: "legit",
+      explanation: "Using a bank’s own ATM in a visible location is usually safe. Still, cover your PIN and be aware of your surroundings.",
+      redFlags: []
+    },
+    {
+      difficulty: "Advanced",
+      type: "Tech Support",
+      title: "“Pop-up saying your computer is infected”",
+      scenario: "A full-screen pop-up claims your computer is infected and tells you to call a phone number to \"unlock\" your device. The pop-up beeps and flashes.",
+      clues: [
+        "Random pop-up, not from your antivirus.",
+        "Demands you call a number.",
+        "Uses fear and urgency."
+      ],
+      correct: "fraud",
+      explanation: "Fake tech support pop-ups try to scare you into calling so scammers can charge you or take over your device.",
+      redFlags: [
+        "Browser pop-up, not your own security software.",
+        "Pressure to call immediately.",
+        "Asking for remote access or payment."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Student Loans",
+      title: "“Instant student loan forgiveness for a fee”",
+      scenario: "You get a robocall offering instant student loan forgiveness if you pay a $250 enrollment fee today.",
+      clues: [
+        "Robocall with generic greeting.",
+        "Upfront fee to access forgiveness.",
+        "Pressure to act immediately."
+      ],
+      correct: "fraud",
+      explanation: "Legit federal programs don’t charge enrollment fees through random robocalls.",
+      redFlags: [
+        "Upfront fees for supposed government benefits.",
+        "No official website or paperwork.",
+        "\"Today only\" urgency."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Employment",
+      title: "“Legit remote job with normal payroll”",
+      scenario: "You apply through a known company’s website, do interviews, and receive an offer letter. They say you’ll be paid by direct deposit after filling out standard HR forms.",
+      clues: [
+        "Formal interview process.",
+        "Official email domain and HR documents.",
+        "No requests to move money for the company."
+      ],
+      correct: "legit",
+      explanation: "This is how many real jobs work: paperwork, direct deposit, and no requests to use your personal accounts to route funds.",
+      redFlags: []
+    },
+    {
+      difficulty: "Advanced",
+      type: "Crypto",
+      title: "“Celebrity crypto giveaway”",
+      scenario: "A livestream on social media claims a famous person is giving away crypto — \"send 0.1 coin, get 1 coin back.\" A QR code is shown on screen.",
+      clues: [
+        "Send crypto first to get more back.",
+        "Offer seems too good to be true.",
+        "No official announcement from the real celebrity accounts."
+      ],
+      correct: "fraud",
+      explanation: "Crypto \"send me money, I’ll send more back\" offers are almost always scams.",
+      redFlags: [
+        "Requires sending crypto up front.",
+        "Uses a famous name to gain trust.",
+        "\"Guaranteed\" multiplied returns."
+      ]
+    },
+    {
+      difficulty: "Advanced",
+      type: "Banking App",
+      title: "“Friend asks you to receive money for them”",
+      scenario: "An old acquaintance asks if they can deposit checks into your account and have you send them the cash, promising you a small cut.",
+      clues: [
+        "They want to use your account as a pass-through.",
+        "They can’t explain why they can’t use their own account.",
+        "Offer feels secretive or rushed."
+      ],
+      correct: "fraud",
+      explanation: "This is often money laundering or check fraud. Using your account can get you in serious trouble.",
+      redFlags: [
+        "You become the middle-person for money.",
+        "No clear, legitimate reason.",
+        "Offer of \"easy\" money for doing almost nothing."
+      ]
+    },
+    {
+      difficulty: "Intermediate",
+      type: "Online Store",
+      title: "“Shopping on a cloned website”",
+      scenario: "You click an ad for your favorite shoe brand, but the site URL is slightly off and prices are unbelievably cheap. They only accept Zelle®, Cash App, or crypto — no cards.",
+      clues: [
+        "URL is different from the brand’s real domain.",
+        "Prices are far below normal.",
+        "No credit/debit card or buyer protection."
+      ],
+      correct: "fraud",
+      explanation: "Fake shopping sites charge you but never ship items, and they use payment methods that are hard to reverse.",
+      redFlags: [
+        "Look-alike website address.",
+        "Suspiciously low prices.",
+        "No standard payment options."
+      ]
+    },
+    {
+      difficulty: "Beginner",
+      type: "Bank Branch",
+      title: "“Meeting with a banker by appointment”",
+      scenario: "You schedule an appointment at your bank branch to ask questions about opening a savings account. You sit with a banker at their desk inside the branch.",
+      clues: [
+        "You initiated the visit.",
+        "Official bank location and staff.",
+        "No pressure to move money in strange ways."
+      ],
+      correct: "legit",
+      explanation: "Talking with staff inside your bank branch is a normal way to handle money questions.",
+      redFlags: []
+    }
+  ];
+
+  /* =========================
+     Build CASES = 100 entries
+     ========================= */
+  const CASES = (function() {
+    const variants = [];
+    const variantLabels = ["A", "B", "C", "D"];
+    let nextId = 1;
+
+    BASE_CASES.forEach((base, baseIndex) => {
+      variantLabels.forEach((label, vIndex) => {
+        if (variants.length >= 100) return;
+        const copy = Object.assign({}, base);
+        copy.id = nextId++;
+        copy.title = base.title + (vIndex === 0 ? "" : " (Variant " + label + ")");
+        variants.push(copy);
+      });
+    });
+
+    return variants;
+  })();
+
+  // ============ GAME STATE ============
+  let gameCases = [];
+  let currentIndex = 0;
+  let scoreCorrect = 0;
+  let scoreTotalAnswered = 0;
+  let gameActive = false;
+  let gameResults = [];
+
+  // DOM
+  const introPanel = document.getElementById("wgra-fraud-intro-panel");
+  const casePanel = document.getElementById("wgra-fraud-case-panel");
+  const startBtn = document.getElementById("wgra-fraud-start-btn");
+  const btnFraud = document.getElementById("wgra-fraud-btn-fraud");
+  const btnLegit = document.getElementById("wgra-fraud-btn-legit");
+  const nextBtn = document.getElementById("wgra-fraud-next-btn");
+  const difficultyPill = document.getElementById("wgra-fraud-difficulty-pill");
+  const typePill = document.getElementById("wgra-fraud-type-pill");
+  const caseCountLabel = document.getElementById("wgra-fraud-case-count");
+  const caseTitleEl = document.getElementById("wgra-fraud-case-title");
+  const caseTextEl = document.getElementById("wgra-fraud-case-text");
+  const caseCluesEl = document.getElementById("wgra-fraud-case-clues");
+  const progressBar = document.getElementById("wgra-fraud-progress-bar");
+  const progressLabel = document.getElementById("wgra-fraud-progress-label");
+
+  const scoreMain = document.getElementById("wgra-fraud-score-main");
+  const scoreSub = document.getElementById("wgra-fraud-score-sub");
+  const feedbackBlock = document.getElementById("wgra-fraud-feedback-block");
+  const feedbackTag = document.getElementById("wgra-fraud-feedback-tag");
+  const feedbackTitle = document.getElementById("wgra-fraud-feedback-title");
+  const feedbackBody = document.getElementById("wgra-fraud-feedback-body");
+  const feedbackRedFlags = document.getElementById("wgra-fraud-feedback-redflags");
+  const summaryBlock = document.getElementById("wgra-fraud-summary");
+  const summaryText = document.getElementById("wgra-fraud-summary-text");
+  const resultsList = document.getElementById("wgra-fraud-results-list");
+  const restartBtn = document.getElementById("wgra-fraud-restart-btn");
+
+  function shuffleArray(arr) {
+    const copy = arr.slice();
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function difficultyLabel(diff) {
+    if (!diff) return "Case";
+    return diff + " Case";
+  }
+
+  function answerLabel(code) {
+    return code === "fraud" ? "Fraud" : "Looks Legit";
+  }
+
+  function startGame() {
+    gameCases = shuffleArray(CASES).slice(0, TOTAL_CASES_PER_GAME);
+    currentIndex = 0;
+    scoreCorrect = 0;
+    scoreTotalAnswered = 0;
+    gameActive = true;
+    gameResults = [];
+
+    introPanel.classList.add("wgra-fraud-hidden");
+    casePanel.classList.remove("wgra-fraud-hidden");
+    feedbackBlock.classList.add("wgra-fraud-hidden");
+    summaryBlock.classList.add("wgra-fraud-hidden");
+
+    btnFraud.disabled = false;
+    btnLegit.disabled = false;
+    nextBtn.disabled = true;
+    nextBtn.textContent = "Next Case";
+
+    progressBar.style.width = "0%";
+    progressLabel.textContent = "0 of " + gameCases.length + " cases completed";
+
+    renderCase();
+    updateScoreDisplay();
+  }
+
+  function renderCase() {
+    const current = gameCases[currentIndex];
+    if (!current) {
+      endGame();
+      return;
+    }
+
+    difficultyPill.textContent = difficultyLabel(current.difficulty);
+    typePill.textContent = current.type + " Case";
+    caseCountLabel.textContent = "Case " + (currentIndex + 1) + " of " + gameCases.length;
+    caseTitleEl.textContent = current.title;
+    caseTextEl.textContent = current.scenario;
+
+    caseCluesEl.innerHTML = "";
+    current.clues.forEach(clue => {
+      const li = document.createElement("li");
+      li.textContent = clue;
+      caseCluesEl.appendChild(li);
+    });
+
+    feedbackBlock.classList.add("wgra-fraud-hidden");
+  }
+
+  function updateProgress() {
+    if (!gameCases.length) return;
+    const pct = Math.round((scoreTotalAnswered / gameCases.length) * 100);
+    progressBar.style.width = pct + "%";
+    progressLabel.textContent = scoreTotalAnswered + " of " + gameCases.length + " cases completed";
+  }
+
+  function handleAnswer(userAnswer) {
+    if (!gameCases.length) return;
+    if (btnFraud.disabled && btnLegit.disabled) return;
+
+    const current = gameCases[currentIndex];
+    const isCorrect = (userAnswer === current.correct);
+
+    scoreTotalAnswered += 1;
+    if (isCorrect) scoreCorrect += 1;
+
+    gameResults.push({
+      index: currentIndex + 1,
+      title: current.title,
+      difficulty: current.difficulty,
+      type: current.type,
+      correctAnswer: current.correct,
+      userAnswer: userAnswer,
+      isCorrect: isCorrect
+    });
+
+    showFeedback(isCorrect, current, userAnswer);
+    updateScoreDisplay();
+    updateProgress();
+
+    btnFraud.disabled = true;
+    btnLegit.disabled = true;
+
+    const isLastCase = (currentIndex === gameCases.length - 1);
+    if (isLastCase) {
+      gameActive = false;
+      nextBtn.textContent = "View Results";
+    } else {
+      nextBtn.textContent = "Next Case";
+    }
+    nextBtn.disabled = false;
+  }
+
+  function showFeedback(isCorrect, current, userAnswer) {
+    feedbackBlock.classList.remove("wgra-fraud-hidden");
+
+    if (isCorrect) {
+      feedbackTag.textContent = "Correct";
+      feedbackTag.classList.remove("wrong");
+      feedbackTag.classList.add("correct");
+      feedbackTitle.textContent = "You spotted the right pattern.";
+      feedbackBody.textContent = current.explanation;
+    } else {
+      feedbackTag.textContent = "Not Quite";
+      feedbackTag.classList.remove("correct");
+      feedbackTag.classList.add("wrong");
+      const correctText = current.correct === "fraud"
+        ? "This situation is fraudulent."
+        : "This situation is likely legitimate.";
+      feedbackTitle.textContent = correctText;
+      feedbackBody.textContent = current.explanation;
+    }
+
+    feedbackRedFlags.innerHTML = "";
+    if (current.redFlags && current.redFlags.length > 0) {
+      current.redFlags.forEach(flag => {
+        const li = document.createElement("li");
+        li.textContent = flag;
+        feedbackRedFlags.appendChild(li);
+      });
+    } else {
+      const li = document.createElement("li");
+      li.textContent = "No obvious red flags here. Still, monitor your accounts and trust-but-verify.";
+      feedbackRedFlags.appendChild(li);
+    }
+  }
+
+  function updateScoreDisplay() {
+    scoreMain.textContent = scoreCorrect + " / " + scoreTotalAnswered + " correct";
+
+    if (scoreTotalAnswered === 0) {
+      scoreSub.textContent = "Start the game to begin tracking your detective score.";
+      return;
+    }
+
+    const pct = Math.round((scoreCorrect / scoreTotalAnswered) * 100);
+    let label = "";
+
+    if (pct === 100) {
+      label = "Perfect work. Your fraud radar is sharp.";
+    } else if (pct >= 80) {
+      label = "Strong instincts. Keep polishing your red-flag checklist.";
+    } else if (pct >= 50) {
+      label = "Solid start. Some scams are designed to fool smart people — review the clues.";
+    } else {
+      label = "Remember: scammers are professionals. The more you practice, the safer you get.";
+    }
+
+    scoreSub.textContent = pct + "% correct — " + label;
+  }
+
+  function buildResultsList() {
+    resultsList.innerHTML = "";
+    if (!gameResults.length) return;
+
+    gameResults.forEach(result => {
+      const item = document.createElement("div");
+      item.className = "wgra-fraud-result-item";
+
+      const header = document.createElement("div");
+      header.className = "wgra-fraud-result-header";
+
+      const pill = document.createElement("div");
+      pill.className = "wgra-fraud-result-pill " + (result.isCorrect ? "correct" : "wrong");
+
+      const titleText = document.createElement("div");
+      titleText.textContent = "Case " + result.index + ": " + result.title;
+
+      header.appendChild(pill);
+      header.appendChild(titleText);
+
+      const meta = document.createElement("div");
+      meta.className = "wgra-fraud-result-meta";
+      const yourAns = document.createElement("span");
+      yourAns.textContent = "Your answer: " + answerLabel(result.userAnswer);
+      const correctAns = document.createElement("span");
+      correctAns.textContent = "Correct: " + answerLabel(result.correctAnswer);
+      const level = document.createElement("span");
+      level.textContent = (result.difficulty || "Case") + " • " + result.type;
+
+      meta.appendChild(yourAns);
+      meta.appendChild(correctAns);
+      meta.appendChild(level);
+
+      item.appendChild(header);
+      item.appendChild(meta);
+      resultsList.appendChild(item);
+    });
+  }
+
+  function endGame() {
+    buildResultsList();
+    summaryBlock.classList.remove("wgra-fraud-hidden");
+
+    const total = gameCases.length;
+    const pct = total > 0 ? Math.round((scoreCorrect / total) * 100) : 0;
+    let summary = "";
+
+    if (pct === 100) {
+      summary = "You solved every case. Your Financial Fraud Detective™ skills are elite. Share these red flags with friends and family.";
+    } else if (pct >= 80) {
+      summary = "Excellent work. A few more reps and you’ll be nearly impossible to scam.";
+    } else if (pct >= 50) {
+      summary = "You caught many fraud patterns, but some slipped through. Reviewing the red flags will make you stronger.";
+    } else {
+      summary = "Scams are engineered to be confusing and emotional. Use what you learned here as a starting point to stay safer next time.";
+    }
+
+    summaryText.textContent = summary;
+    nextBtn.disabled = true;
+  }
+
+  function goToNext() {
+    if (!gameCases.length) return;
+
+    const isLastIndex = (currentIndex === gameCases.length - 1);
+
+    if (isLastIndex && scoreTotalAnswered === gameCases.length) {
+      endGame();
+      return;
+    }
+
+    if (currentIndex < gameCases.length - 1) {
+      currentIndex += 1;
+      renderCase();
+      btnFraud.disabled = false;
+      btnLegit.disabled = false;
+      nextBtn.disabled = true;
+      nextBtn.textContent = "Next Case";
+    }
+  }
+
+  function restartGame() {
+    gameActive = false;
+    introPanel.classList.remove("wgra-fraud-hidden");
+    casePanel.classList.add("wgra-fraud-hidden");
+    feedbackBlock.classList.add("wgra-fraud-hidden");
+    summaryBlock.classList.add("wgra-fraud-hidden");
+
+    scoreCorrect = 0;
+    scoreTotalAnswered = 0;
+    gameResults = [];
+    updateScoreDisplay();
+
+    progressBar.style.width = "0%";
+    progressLabel.textContent = "0 of " + TOTAL_CASES_PER_GAME + " cases completed";
+
+    btnFraud.disabled = false;
+    btnLegit.disabled = false;
+    nextBtn.disabled = true;
+    nextBtn.textContent = "Next Case";
+  }
+
+  startBtn.addEventListener("click", startGame);
+  btnFraud.addEventListener("click", function() { handleAnswer("fraud"); });
+  btnLegit.addEventListener("click", function() { handleAnswer("legit"); });
+  nextBtn.addEventListener("click", goToNext);
+  restartBtn.addEventListener("click", restartGame);
+})();
+</script>
+</body></html>

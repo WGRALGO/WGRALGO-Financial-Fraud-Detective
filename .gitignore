@@ -1,0 +1,24 @@
+node_modules/
+.DS_Store
+*.log
+
+# Capacitor build artifacts
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/app/src/main/res/xml/config.xml
+
+# Local Android files
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+
+# Secrets / signing
+android/keystore.properties
+*.jks
+*.keystore
+
+# Generated mcp/temp
+.playwright-mcp/
