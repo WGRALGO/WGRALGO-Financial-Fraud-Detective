@@ -1,6 +1,7 @@
 # WGRALGO Financial Fraud Detective
 
-**Version: 1.1.0**
+**Version: 2.0.0**  
+**Devices:** phones and tablets, portrait and landscape
 
 Financial Fraud Detective is a free educational Android app from **The Wealth Gap Resolution Algorithm™ Inc.** It helps users practice spotting scams, phishing attempts, suspicious money requests, fake support messages, and other financial fraud red flags through interactive case-based gameplay.
 
@@ -44,11 +45,11 @@ See [PRIVACY.md](PRIVACY.md) for the full privacy statement.
 
 ## Installation (Sideloading)
 
-1. Download `WGRALGO_Financial_Fraud_Detective_v1.1.0.apk` from the
-   [v1.1.0 release](../../releases/tag/v1.1.0).
+1. Download `WGRALGO-FinancialFraudDetective-v2.0.0.apk` from the
+   [v2.0.0 release](../../releases/tag/v2.0.0).
 2. (Optional) Verify the download with the `.sha256` file attached to the release:
    ```
-   sha256sum -c WGRALGO_Financial_Fraud_Detective_v1.1.0.apk.sha256
+   sha256sum -c WGRALGO-FinancialFraudDetective-v2.0.0.apk.sha256
    ```
 3. On your Android device, allow installation from unknown sources for your browser or file manager.
 4. Open the APK and install.
@@ -63,7 +64,7 @@ Release signing certificate from v1.1.0 onward
 
 `0E:F1:3A:04:FC:3D:36:B6:D7:BA:7D:32:53:C1:FD:59:EC:56:D7:E1:AC:0B:5E:C2:C2:30:03:50:24:6F:7B:9A`
 
-Check it with `apksigner verify --print-certs WGRALGO_Financial_Fraud_Detective_v1.1.0.apk`.
+Check it with `apksigner verify --print-certs WGRALGO-FinancialFraudDetective-v2.0.0.apk`.
 
 ## Build from Source
 

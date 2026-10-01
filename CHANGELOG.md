@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.0.0 — 2026-10-01
+
+- Version 2.0.0 (versionCode 200).
+- The APK file is now named `WGRALGO-FinancialFraudDetective-v2.0.0.apk`. All WGRALGO apps now use the same `WGRALGO-<AppName>-v<version>.apk` naming.
+- Works on phones and tablets in portrait and landscape. It rotates with your device, like the other WGRALGO apps.
+- Checked on phones in landscape and on tablets in portrait and landscape. No layout changes were needed.
+- No changes to the questions, scoring, privacy, or license.
+
 ## v1.1.0
 
 - New case library from the updated web game: 45 realistic cases covering
