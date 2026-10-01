@@ -1,9 +1,20 @@
 apply plugin: 'com.android.application'
 
+// Release signing is read from android/keystore.properties or from environment
+// variables (used by the GitHub release workflow). The keystore and its
+// passwords are NEVER committed to git.
 def keystorePropsFile = rootProject.file("keystore.properties")
 def keystoreProps = new Properties()
+def hasReleaseSigning = false
 if (keystorePropsFile.exists()) {
     keystoreProps.load(new FileInputStream(keystorePropsFile))
+    hasReleaseSigning = true
+} else if (System.getenv("FFD_KEYSTORE_FILE")) {
+    keystoreProps.setProperty("storeFile", System.getenv("FFD_KEYSTORE_FILE"))
+    keystoreProps.setProperty("storePassword", System.getenv("FFD_KEYSTORE_PASSWORD") ?: "")
+    keystoreProps.setProperty("keyAlias", System.getenv("FFD_KEY_ALIAS") ?: "")
+    keystoreProps.setProperty("keyPassword", System.getenv("FFD_KEY_PASSWORD") ?: "")
+    hasReleaseSigning = true
 }
 
 android {
@@ -13,8 +24,8 @@ android {
         applicationId "org.wgralgo.financialfrauddetective"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 100
-        versionName "1.0.0"
+        versionCode 110
+        versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
@@ -22,7 +33,7 @@ android {
     }
     signingConfigs {
         release {
-            if (keystorePropsFile.exists()) {
+            if (hasReleaseSigning) {
                 storeFile file(keystoreProps['storeFile'])
                 storePassword keystoreProps['storePassword']
                 keyAlias keystoreProps['keyAlias']
@@ -36,7 +47,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (keystorePropsFile.exists()) {
+            if (hasReleaseSigning) {
                 signingConfig signingConfigs.release
             }
         }
