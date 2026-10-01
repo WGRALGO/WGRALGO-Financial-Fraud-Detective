@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.1.0
+
+- New case library from the updated web game: 45 realistic cases covering
+  identity theft, cars, contractors, loans, credit and debt, taxes, benefits,
+  immigration and legal help, cards and checks, home and property, and small business.
+- Evidence is shown the way you'd really see it: text threads, emails, phone-call
+  transcripts, web pages, mailed letters, and in-person situations.
+- Balanced rounds: 4 beginner / 4 intermediate / 2 advanced, 5 fraud + 5 legit.
+- Feedback now includes "What to do in real life" for every case.
+- Results: detective rank, weak spots by category, and an expandable case file.
+- New native-style app design (app bar, progress bar, bottom action buttons,
+  score ring, slide-up About / Privacy / Credits sheets).
+- Added a Content-Security-Policy; removed the website "Request a Workshop" link.
+- **New release signing key.** Uninstall v1.0.0 before installing v1.1.0.
+- Added GitHub Actions: debug build on every push and a signed release workflow.
+- Added `tools/validate-release.sh` (`npm run validate`).
+- Version 1.0.0 → 1.1.0 (versionCode 100 → 110).
+
 ## v1.0.0
 
 - Initial GitHub-ready Android APK release.

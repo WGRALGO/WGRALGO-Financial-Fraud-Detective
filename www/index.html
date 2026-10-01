@@ -1,1451 +1,1737 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#000000" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none';">
+<meta name="theme-color" content="#000000">
 <title>Financial Fraud Detective</title>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: #000;
-    color: #fdfaf0;
-    min-height: 100vh;
-    overscroll-behavior: none;
-    -webkit-tap-highlight-color: transparent;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
-  body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
-</style>
-</head>
-<body>
-<!-- =============== FINANCIAL FRAUD DETECTIVE™ GAME (100-CASE POOL, RANDOM 10) =============== -->
-<!-- Drop this into a WordPress Elementor HTML widget -->
-
 <style>
   :root {
     --gold: #d4af37;
-    --gold-soft: #f5e4b3;
-    --text: #fdfaf0;
-    --bg: #050505;
-    --card-bg: #111111;
-    --accent-red: #ff6b6b;
-    --accent-green: #5ad18a;
+    --gold-bright: #f5d26a;
+    --gold-soft: #fbe79a;
+    --gold-dim: rgba(212,175,55,0.35);
+    --bg: #000000;
+    --surface: #111111;
+    --surface-2: #1a1a1a;
+    --surface-3: #232323;
+    --line: rgba(255,255,255,0.08);
+    --text: #ffffff;
+    --text-2: #c8c8c8;
+    --text-3: #8e8e8e;
+    --fraud: #ff5d5d;
+    --fraud-bg: rgba(255,93,93,0.14);
+    --legit: #2fbf71;
+    --legit-bg: rgba(47,191,113,0.14);
+    --radius: 18px;
+    --bar-h: 56px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  .wgra-fraud-game-wrapper {
-    width: 100%;
-    background: radial-gradient(circle at top, #181818 0%, var(--bg) 60%);
-    padding: 40px 16px 70px;
-    box-sizing: border-box;
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--bg);
     color: var(--text);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior: none;
   }
+  body { -webkit-user-select: none; user-select: none; }
+  button { font: inherit; color: inherit; }
+  img { -webkit-user-drag: none; }
+  .hidden { display: none !important; }
 
-  .wgra-fraud-game {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: rgba(7,7,7,0.96);
-    border-radius: 18px;
-    border: 1px solid rgba(212,175,55,0.45);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.9);
-    padding: 26px 18px 30px;
+  /* ===== App bar ===== */
+  .app-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 20;
+    padding-top: var(--safe-top);
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
   }
-
-  @media (min-width: 768px) {
-    .wgra-fraud-game {
-      padding: 32px 32px 36px;
-    }
-  }
-
-  .wgra-fraud-header {
-    text-align: center;
-    margin-bottom: 24px;
-  }
-
-  .wgra-fraud-kicker {
-    font-size: 11px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold-soft);
-    margin-bottom: 6px;
-  }
-
-  .wgra-fraud-title {
-    font-size: 26px;
-    line-height: 1.3;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-
-  .wgra-fraud-subtitle {
-    max-width: 640px;
-    margin: 0 auto;
-    font-size: 14px;
-    color: rgba(253,250,240,0.9);
-  }
-
-  .wgra-fraud-tagline-bar {
-    margin: 18px auto 10px;
-    max-width: 740px;
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: radial-gradient(circle at 0 0, rgba(212,175,55,0.22), transparent 60%);
-    border: 1px solid rgba(212,175,55,0.6);
-    font-size: 12px;
-    color: #fff8e3;
-  }
-
-  .wgra-fraud-main {
-    display: grid;
-    grid-template-columns: 2fr 1.25fr;
-    gap: 24px;
-    align-items: flex-start;
-  }
-
-  @media (max-width: 840px) {
-    .wgra-fraud-main {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .wgra-fraud-panel {
-    background: var(--card-bg);
-    border-radius: 16px;
-    border: 1px solid rgba(212,175,55,0.35);
-    padding: 18px 16px 18px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .wgra-fraud-panel::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top left, rgba(212,175,55,0.12), transparent 60%);
-    opacity: 0.9;
-    pointer-events: none;
-  }
-
-  .wgra-fraud-panel-inner {
-    position: relative;
-    z-index: 2;
-  }
-
-  /* INTRO PANEL */
-  .wgra-fraud-intro-title {
-    font-size: 18px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--gold-soft);
-    margin-bottom: 8px;
-  }
-
-  .wgra-fraud-intro-text {
-    font-size: 14px;
-    color: rgba(253,250,240,0.9);
-    margin-bottom: 10px;
-  }
-
-  .wgra-fraud-intro-list {
-    font-size: 13px;
-    color: rgba(253,250,240,0.9);
-    margin: 6px 0 12px 14px;
-    padding-left: 8px;
-  }
-
-  .wgra-fraud-intro-list li {
-    margin-bottom: 3px;
-  }
-
-  .wgra-fraud-start-hint {
-    font-size: 13px;
-    font-weight: 600;
-    text-align: center;
-    color: #fbe79a;
-    margin-top: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-  }
-
-  .wgra-fraud-start-btn {
-    display: block;
-    margin: 14px auto 0;
-    font-size: 15px;
-    padding: 12px 28px;
-    max-width: 260px;
-    text-align: center;
-    background: linear-gradient(120deg, #ffdf7a, #fbe79a, #d4af37);
-    color: #1b1303;
-    border-radius: 999px;
-    border: 2px solid rgba(245,210,106,0.95);
-    box-shadow:
-      0 0 0 2px rgba(0,0,0,0.9),
-      0 10px 26px rgba(0,0,0,0.85);
-    font-weight: 800;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .wgra-fraud-start-btn:hover {
-    transform: translateY(-2px);
-    box-shadow:
-      0 0 0 2px rgba(0,0,0,0.9),
-      0 14px 30px rgba(0,0,0,0.95);
-  }
-
-  /* GAME PANEL LEFT */
-  .wgra-fraud-meta-row {
+  .app-bar-row {
+    height: var(--bar-h);
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px 14px;
     align-items: center;
-    margin-bottom: 10px;
+    gap: 4px;
+    padding: 0 6px;
+    max-width: 720px;
+    margin: 0 auto;
   }
-
-  .wgra-fraud-pill {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    padding: 4px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(212,175,55,0.6);
-    background: rgba(10,10,10,0.9);
-    color: var(--gold-soft);
-  }
-
-  .wgra-fraud-case-count {
-    font-size: 12px;
-    color: rgba(253,250,240,0.9);
-  }
-
-  .wgra-fraud-case-title {
-    font-size: 15px;
-    font-weight: 600;
-    margin: 6px 0 4px;
-    color: #fff9e4;
-  }
-
-  .wgra-fraud-case-text {
-    font-size: 14px;
-    line-height: 1.6;
-    color: rgba(253,250,240,0.95);
-  }
-
-  .wgra-fraud-case-clues {
-    font-size: 13px;
-    margin-top: 10px;
-    padding-left: 16px;
-    color: rgba(253,250,240,0.9);
-  }
-
-  .wgra-fraud-case-clues li {
-    margin-bottom: 4px;
-  }
-
-  .wgra-fraud-button-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 16px;
-  }
-
-  .wgra-fraud-btn {
-    flex: 1 1 140px;
+  .app-bar-title {
+    flex: 1;
     min-width: 0;
-    padding: 10px 14px;
-    border-radius: 999px;
-    border: 1px solid rgba(212,175,55,0.8);
-    background: rgba(12,12,12,0.96);
-    color: #fdfaf0;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
+    font-size: 19px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 4px;
+  }
+  .app-bar-logo { width: 34px; height: 34px; border-radius: 9px; margin-left: 8px; }
+  .icon-btn {
+    width: 44px; height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 5px 14px rgba(0,0,0,0.75);
-    transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
-    text-align: center;
-    white-space: normal;
+    flex: none;
   }
-
-  .wgra-fraud-btn-yes {
-    border-color: rgba(255,107,107,0.9);
-    background: radial-gradient(circle at 0 0, rgba(255,107,107,0.25), rgba(10,0,0,0.96));
-  }
-
-  .wgra-fraud-btn-no {
-    border-color: rgba(90,209,138,0.9);
-    background: radial-gradient(circle at 0 0, rgba(90,209,138,0.22), rgba(0,10,5,0.96));
-  }
-
-  .wgra-fraud-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 7px 16px rgba(0,0,0,0.85);
-  }
-
-  .wgra-fraud-btn:disabled {
-    opacity: 0.55;
-    cursor: default;
-    transform: none;
-    box-shadow: none;
-  }
-
-  .wgra-fraud-next-row {
-    margin-top: 12px;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .wgra-fraud-next-btn {
-    flex: 0 0 auto;
-    padding: 8px 18px;
+  .icon-btn:active { background: rgba(255,255,255,0.1); }
+  .icon-btn svg { width: 24px; height: 24px; fill: var(--text); }
+  .score-chip {
+    flex: none;
+    margin-right: 4px;
+    padding: 6px 10px;
     border-radius: 999px;
-    border: 1px solid rgba(212,175,55,0.9);
-    background: linear-gradient(120deg, #8b6a1a, var(--gold), var(--gold-soft));
-    color: #1b1303;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
-    cursor: pointer;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.8);
-    transition: transform 0.16s, box-shadow 0.16s, opacity 0.16s;
-    text-decoration: none;
-  }
-
-  .wgra-fraud-next-btn:hover:enabled {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.9);
-  }
-
-  .wgra-fraud-next-btn:disabled {
-    opacity: 0.45;
-    cursor: default;
-    box-shadow: none;
-  }
-
-  @media (max-width: 640px) {
-    .wgra-fraud-btn {
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      padding: 9px 10px;
-    }
-    .wgra-fraud-next-btn {
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      padding: 7px 14px;
-    }
-  }
-
-  .wgra-fraud-progress-wrap {
-    margin-top: 10px;
-  }
-
-  .wgra-fraud-progress-track {
-    width: 100%;
-    height: 8px;
-    border-radius: 999px;
-    background: rgba(40,40,40,0.9);
-    overflow: hidden;
-  }
-
-  .wgra-fraud-progress-bar {
-    height: 100%;
-    width: 0%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #8b6a1a, var(--gold), var(--gold-soft));
-    transition: width 0.3s ease;
-  }
-
-  .wgra-fraud-progress-label {
-    font-size: 11px;
-    margin-top: 4px;
-    color: rgba(253,250,240,0.82);
-  }
-
-  .wgra-fraud-score-header {
-    font-size: 13px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold-soft);
-    margin-bottom: 6px;
-  }
-
-  .wgra-fraud-score-main {
-    font-size: 22px;
-    font-weight: 700;
-    color: #fffbe5;
-    margin-bottom: 4px;
-  }
-
-  .wgra-fraud-score-sub {
-    font-size: 13px;
-    color: rgba(253,250,240,0.8);
-    margin-bottom: 10px;
-  }
-
-  .wgra-fraud-feedback-tag {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    padding: 4px 10px;
-    border-radius: 999px;
-    display: inline-block;
-    margin-bottom: 6px;
-  }
-
-  .wgra-fraud-feedback-tag.correct {
-    background: rgba(90,209,138,0.22);
-    color: var(--accent-green);
-    border: 1px solid rgba(90,209,138,0.9);
-  }
-
-  .wgra-fraud-feedback-tag.wrong {
-    background: rgba(255,107,107,0.18);
-    color: var(--accent-red);
-    border: 1px solid rgba(255,107,107,0.9);
-  }
-
-  .wgra-fraud-feedback-title {
+    background: var(--surface-3);
     font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: #fff9e3;
-  }
-
-  .wgra-fraud-feedback-body {
-    font-size: 13px;
-    color: rgba(253,250,240,0.92);
-    margin-bottom: 8px;
-  }
-
-  .wgra-fraud-feedback-list {
-    font-size: 13px;
-    color: rgba(253,250,240,0.92);
-    margin-left: 16px;
-    padding-left: 6px;
-  }
-
-  .wgra-fraud-feedback-list li {
-    margin-bottom: 3px;
-  }
-
-  .wgra-fraud-summary {
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px dashed rgba(212,175,55,0.35);
-    font-size: 13px;
-    color: rgba(253,250,240,0.85);
-  }
-
-  .wgra-fraud-summary-btn-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .wgra-fraud-summary-btn {
-    flex: 0 0 auto;
-    padding: 7px 16px;
-    border-radius: 999px;
-    border: 1px solid rgba(212,175,55,0.75);
-    background: rgba(12,12,12,0.96);
+    font-weight: 700;
     color: var(--gold-soft);
-    font-size: 11px;
+    white-space: nowrap;
+  }
+  .progress-fill {
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+    transition: width 0.35s ease;
+  }
+
+  /* ===== Screens ===== */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    padding: calc(var(--bar-h) + var(--safe-top) + 16px) 16px calc(112px + var(--safe-bottom));
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .screen.active { display: block; animation: screen-in 0.28s ease; }
+  @keyframes screen-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .section-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    letter-spacing: 0.18em;
-    cursor: pointer;
-    box-shadow: 0 5px 14px rgba(0,0,0,0.75);
-    transition: transform 0.16s, box-shadow 0.16s, background 0.16s;
-    text-decoration: none;
+    color: var(--gold);
+    margin: 22px 4px 10px;
   }
 
-  .wgra-fraud-summary-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 7px 16px rgba(0,0,0,0.85);
+  /* ===== Home ===== */
+  .hero { text-align: center; padding: 8px 8px 4px; }
+  .hero-logo {
+    width: 148px; height: 148px;
+    border-radius: 34px;
+    box-shadow: 0 0 40px rgba(212,175,55,0.25);
+  }
+  .hero h1 { margin: 14px 0 4px; font-size: 27px; font-weight: 800; color: var(--gold-soft); }
+  .hero p { margin: 0 auto; max-width: 460px; font-size: 15px; line-height: 1.5; color: var(--text-2); }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 14px; }
+  .chip {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-soft);
+  }
+  .step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+  .step + .step { margin-top: 12px; }
+  .step strong { color: var(--text); }
+  .step-num {
+    flex: none;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: rgba(212,175,55,0.15);
+    color: var(--gold-bright);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+  }
+  .mix-note { font-size: 14px; line-height: 1.5; color: var(--text-3); margin: 14px 0 0; }
+  .best {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-soft);
+    margin-top: 6px;
+  }
+  .best:empty { display: none; }
+  .topics { display: flex; flex-wrap: wrap; gap: 6px; }
+  .topic {
+    font-size: 13px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--text-2);
+  }
+  .home-footer {
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-3);
+    margin-top: 22px;
   }
 
-  .wgra-fraud-results-list {
-    margin-top: 10px;
-    max-height: 260px;
-    overflow-y: auto;
-    padding-right: 4px;
+  /* ===== Case ===== */
+  .case-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .pill {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--surface-3);
+    color: var(--text-2);
   }
-
-  .wgra-fraud-result-item {
-    padding: 6px 0;
-    border-bottom: 1px dashed rgba(212,175,55,0.25);
+  .pill.diff { background: rgba(212,175,55,0.16); color: var(--gold-bright); }
+  .case-title {
+    margin: 0 0 14px;
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 800;
+    outline: none;
   }
+  .case-notes {
+    margin: 14px 0 0;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px dashed var(--gold-dim);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+  .case-notes b { color: var(--gold-soft); }
 
-  .wgra-fraud-result-header {
+  /* ===== Evidence ===== */
+  .ev {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  .ev-head {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #fffbe5;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
   }
-
-  .wgra-fraud-result-pill {
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    flex-shrink: 0;
+  .ev-avatar {
+    flex: none;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    background: var(--surface-3);
   }
+  .ev-head-text { flex: 1; min-width: 0; }
+  .ev-kind { display: block; font-size: 12px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .ev-who { display: block; font-size: 16px; font-weight: 700; overflow-wrap: anywhere; }
+  .ev-body { padding: 14px; font-size: 16px; line-height: 1.55; }
+  .ev-body p { margin: 0 0 10px; color: #ececec; }
+  .ev-body p:last-child { margin-bottom: 0; }
 
-  .wgra-fraud-result-pill.correct {
-    background: var(--accent-green);
+  .ev-thread { background: #0b0b0b; }
+  .bubble {
+    max-width: 88%;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-radius: 18px 18px 18px 6px;
+    background: #262626;
+    color: #f3f3f3;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
   }
+  .bubble:last-child { margin-bottom: 0; }
 
-  .wgra-fraud-result-pill.wrong {
-    background: var(--accent-red);
+  .ev-email .ev-head { align-items: flex-start; }
+  .ev-subject {
+    padding: 12px 14px 0;
+    font-size: 17px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
   }
-
-  .wgra-fraud-result-meta {
-    font-size: 11px;
-    color: rgba(253,250,240,0.8);
-    margin-top: 2px;
-  }
-
-  .wgra-fraud-result-meta span {
+  .ev-link-btn {
     display: inline-block;
-    margin-right: 10px;
+    margin-top: 4px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: #2a5bd7;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .ev-link-note {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-3);
+    overflow-wrap: anywhere;
+  }
+  .ev-link-note code { color: var(--gold-soft); font-family: ui-monospace, monospace; font-size: 13px; }
+
+  .ev-call .ev-avatar { background: rgba(47,191,113,0.18); }
+  .call-line { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+  .call-line:last-child { margin-bottom: 0; }
+  .speaker {
+    flex: none;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: var(--surface-3);
+    color: var(--gold-soft);
+    margin-top: 2px;
+    max-width: 38%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .speaker.you { background: #1f4f8f; color: #fff; }
+  .call-line span:last-child { overflow-wrap: anywhere; }
+
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .url {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #000;
+    font-family: ui-monospace, monospace;
+    font-size: 13px;
+    color: #e6e6e6;
+    overflow-wrap: anywhere;
   }
 
-  @media (max-width: 640px) {
-    .wgra-fraud-results-list {
-      max-height: 220px;
-    }
-  }
+  .url.desc { font-family: inherit; font-size: 13px; border-radius: 12px; color: var(--text-2); }
 
-  .wgra-fraud-hidden {
-    display: none !important;
+  .ev-letter { background: #f4ecd8; border-color: #d8ccb0; }
+  .ev-letter .ev-head { background: #e9dfc6; border-bottom-color: #d8ccb0; }
+  .ev-letter .ev-kind { color: #6d6450; }
+  .ev-letter .ev-who { color: #1b170f; }
+  .ev-letter .ev-avatar { background: #d8ccb0; }
+  .ev-letter .ev-body p { color: #24201a; font-family: Georgia, "Times New Roman", serif; }
+
+  .ev-scene .ev-avatar { background: rgba(212,175,55,0.15); }
+
+  /* ===== Feedback ===== */
+  .feedback {
+    display: none;
+    margin-top: 14px;
+    border-radius: 22px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    animation: screen-in 0.25s ease;
+  }
+  .feedback.show { display: block; }
+  .feedback.good { border-color: rgba(47,191,113,0.45); }
+  .feedback.bad { border-color: rgba(255,93,93,0.45); }
+  .fb-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; }
+  .feedback.good .fb-title { color: var(--legit); }
+  .feedback.bad .fb-title { color: var(--fraud); }
+  .fb-badge {
+    flex: none;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    color: #000;
+  }
+  .feedback.good .fb-badge { background: var(--legit); }
+  .feedback.bad .fb-badge { background: var(--fraud); }
+  .fb-verdict { margin: 10px 0 0; font-size: 15px; line-height: 1.55; color: var(--text-2); }
+  .fb-verdict strong { color: var(--text); }
+  .info-block {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--surface-2);
+    font-size: 15px;
+    line-height: 1.55;
+    color: #ececec;
+  }
+  .info-block b {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .info-block ul { margin: 0; padding-left: 20px; }
+  .info-block li + li { margin-top: 4px; }
+
+  /* ===== Bottom action bar ===== */
+  .bottom-bar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 20;
+    padding: 12px 16px calc(12px + var(--safe-bottom));
+    background: linear-gradient(to top, #000 70%, rgba(0,0,0,0));
+    display: none;
+  }
+  .bottom-bar.active { display: block; }
+  .bottom-row { display: flex; gap: 10px; max-width: 688px; margin: 0 auto; }
+  .btn {
+    flex: 1;
+    min-height: 54px;
+    border: 0;
+    border-radius: 16px;
+    padding: 0 12px;
+    font-size: 17px;
+    font-weight: 800;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.08s ease, opacity 0.2s;
+  }
+  .btn:active:not(:disabled) { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.4; }
+  .btn:focus-visible, .icon-btn:focus-visible { outline: 3px solid var(--gold-bright); outline-offset: 2px; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    color: #000;
+    box-shadow: 0 6px 20px rgba(212,175,55,0.3);
+  }
+  .btn-fraud { background: var(--fraud); color: #2a0000; }
+  .btn-legit { background: var(--legit); color: #001b0c; }
+  .btn-tonal { background: var(--surface-3); color: var(--gold-soft); }
+
+  /* ===== Results ===== */
+  .result-hero { text-align: center; padding: 8px 0 4px; }
+  .ring {
+    --pct: 0;
+    width: 168px; height: 168px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: conic-gradient(var(--gold) calc(var(--pct) * 1%), var(--surface-3) 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ring-inner {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .ring-score { font-size: 42px; font-weight: 800; color: var(--gold-soft); line-height: 1; }
+  .ring-pct { font-size: 14px; color: var(--text-2); margin-top: 6px; }
+  .rank-badge {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--gold);
+    color: var(--gold-bright);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .result-msg { font-size: 15px; line-height: 1.55; color: var(--text-2); margin: 12px auto 0; max-width: 460px; }
+  .recap { font-size: 15px; line-height: 1.55; color: var(--text-2); }
+  .recap strong { display: block; color: var(--text); margin-bottom: 6px; }
+  .recap ul { margin: 0; padding-left: 20px; }
+  .recap li + li { margin-top: 4px; }
+  .recap.clean strong { color: var(--legit); }
+  .report-tip { font-size: 14px; line-height: 1.55; color: var(--text-2); }
+  .report-tip strong { color: var(--gold-soft); }
+
+  .review-head { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+  .review-head .section-label { margin: 10px 4px; }
+  .text-btn {
+    border: 0;
+    background: transparent;
+    color: var(--gold-bright);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 4px;
+    cursor: pointer;
+  }
+  .review-item {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .review-item summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+  }
+  .review-item summary::-webkit-details-marker { display: none; }
+  .mark {
+    flex: none;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 15px;
+  }
+  .mark.ok { background: var(--legit-bg); color: var(--legit); }
+  .mark.no { background: var(--fraud-bg); color: var(--fraud); }
+  .review-sum { flex: 1; min-width: 0; }
+  .review-sum b { display: block; font-size: 15px; }
+  .review-sum span { display: block; font-size: 13px; color: var(--text-3); margin-top: 2px; }
+  .chev { flex: none; width: 20px; height: 20px; fill: var(--text-3); transition: transform 0.2s; }
+  .review-item[open] .chev { transform: rotate(180deg); }
+  .review-body { padding: 0 16px 16px; font-size: 15px; line-height: 1.55; color: var(--text-2); }
+  .review-line { margin: 3px 0; }
+  .review-line .lbl { color: var(--text-3); }
+  .tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .tag.fraud { background: var(--fraud-bg); color: var(--fraud); }
+  .tag.legit { background: var(--legit-bg); color: var(--legit); }
+
+  /* ===== Sheets ===== */
+  .scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(0,0,0,0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    max-width: 720px;
+    margin: 0 auto;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: var(--surface-2);
+    border-radius: 24px 24px 0 0;
+    padding: 10px 20px calc(24px + var(--safe-bottom));
+    transform: translateY(105%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  .sheet.open { transform: none; }
+  .sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: #555; margin: 0 auto 14px; }
+  .sheet h3 { margin: 0 0 10px; font-size: 21px; color: var(--gold-soft); }
+  .sheet p, .sheet li { font-size: 15px; line-height: 1.6; color: #e4e4e4; }
+  .sheet ul { padding-left: 20px; }
+  .sheet .muted { color: var(--text-3); font-size: 14px; }
+  .sheet .btn { width: 100%; margin-top: 12px; }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 14px 6px;
+    border: 0;
+    background: transparent;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 12px;
+  }
+  .menu-item:active { background: rgba(255,255,255,0.06); }
+  .menu-item svg { width: 22px; height: 22px; fill: var(--gold); flex: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
+</head>
+<body>
 
-<div class="wgra-fraud-game-wrapper" id="financial-fraud-detective-game">
-  <div class="wgra-fraud-game">
+<!-- APP BAR -->
+<header class="app-bar">
+  <div class="app-bar-row">
+    <button id="bar-back" class="icon-btn hidden" aria-label="Back to home">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </button>
+    <img id="bar-logo" class="app-bar-logo" src="logo.png" alt="">
+    <div id="bar-title" class="app-bar-title">Fraud Detective</div>
+    <div id="bar-score" class="score-chip hidden">Score <span id="score">0</span></div>
+    <button class="icon-btn" data-sheet="sheet-menu" aria-label="More options">
+      <svg viewBox="0 0 24 24"><path d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+    </button>
+  </div>
+  <div id="progress-fill" class="progress-fill" role="progressbar" aria-label="Cases completed" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"></div>
+</header>
 
-    <div class="wgra-fraud-header">
-      <div class="wgra-fraud-kicker">Digital Safety Lab</div>
-      <h2 class="wgra-fraud-title">Financial Fraud Detective™</h2>
-      <p class="wgra-fraud-subtitle">
-        You’re the detective. Read each money situation, study the clues, and decide:
-        is this <strong>Fraud</strong> or does it look <strong>Legit</strong>? Each case reveals red flags
-        that protect your wallet, your credit, and your peace of mind.
-      </p>
-      <div class="wgra-fraud-tagline-bar">
-        Part of The Wealth Gap Resolution Algorithm™ Inc. — helping families stay three steps ahead of scammers.
+<!-- HOME -->
+<main id="screen-home" class="screen active">
+  <div class="hero">
+    <img class="hero-logo" src="logo.png" alt="Financial Fraud Detective logo">
+    <h1>Financial Fraud Detective</h1>
+    <p>You&rsquo;re the detective. Study the evidence &mdash; the letter, the contract, the call, the deal &mdash; and decide: is it <strong>Fraud</strong> or does it look <strong>Legit</strong>?</p>
+    <div class="chips" aria-label="App privacy summary">
+      <span class="chip">Offline</span>
+      <span class="chip">No Ads</span>
+      <span class="chip">No Tracking</span>
+      <span class="chip">No Account</span>
+    </div>
+  </div>
+  <div id="best" class="best"></div>
+
+  <div class="section-label">How it works</div>
+  <div class="card">
+    <div class="step"><span class="step-num">1</span><span>Read the evidence exactly as you&rsquo;d see it on your phone, in the mail, or in person.</span></div>
+    <div class="step"><span class="step-num">2</span><span>Decide: <strong>This is Fraud</strong> or <strong>Looks Legit</strong>.</span></div>
+    <div class="step"><span class="step-num">3</span><span>Get the red flags, the reasons, and what to do in real life.</span></div>
+    <p class="mix-note">Each round has 10 cases: 4 beginner, 4 intermediate, and 2 advanced. About half are legit, so guessing &ldquo;fraud&rdquo; every time won&rsquo;t save you.</p>
+  </div>
+
+  <div class="section-label">Cases cover</div>
+  <div id="topics" class="topics"></div>
+
+  <div class="home-footer">
+    Financial Fraud Detective v1.1.0 &middot; WGRALGO / The Wealth Gap Resolution Algorithm&trade; Inc.<br>
+    For education and awareness only. Not legal, financial, banking, or cybersecurity advice.
+  </div>
+</main>
+
+<!-- CASE -->
+<main id="screen-case" class="screen">
+  <div class="case-meta">
+    <span id="case-diff" class="pill diff"></span>
+    <span id="case-type" class="pill"></span>
+  </div>
+  <h2 id="case-title" class="case-title" tabindex="-1"></h2>
+  <div id="evidence"></div>
+  <p id="case-notes" class="case-notes hidden"></p>
+  <section id="feedback" class="feedback" aria-live="polite"></section>
+</main>
+
+<!-- RESULTS -->
+<main id="screen-results" class="screen">
+  <div class="result-hero">
+    <div id="ring" class="ring">
+      <div class="ring-inner">
+        <div class="ring-score"><span id="final-score">0</span>/<span id="final-total">10</span></div>
+        <div class="ring-pct"><span id="final-pct">0</span>% correct</div>
       </div>
     </div>
+    <div id="rank" class="rank-badge"></div>
+    <p id="summary" class="result-msg"></p>
+  </div>
 
-    <div class="wgra-fraud-main">
+  <div class="section-label">Your weak spots</div>
+  <div id="recap" class="card recap"></div>
 
-      <!-- LEFT PANEL -->
-      <div class="wgra-fraud-panel">
-        <div class="wgra-fraud-panel-inner" id="wgra-fraud-left-panel">
+  <div class="card report-tip">
+    <strong>Spotted a real scam?</strong> Report it at ReportFraud.ftc.gov, and tell your bank right away using the number on the back of your card.
+  </div>
 
-          <!-- INTRO -->
-          <div id="wgra-fraud-intro-panel">
-            <div class="wgra-fraud-intro-title">How the game works</div>
-            <p class="wgra-fraud-intro-text">
-              You’ll see a series of real-world style money situations — texts, calls,
-              “opportunities,” and messages that people receive every day.
-            </p>
-            <ul class="wgra-fraud-intro-list">
-              <li><strong>Step 1:</strong> Read the case description and clues.</li>
-              <li><strong>Step 2:</strong> Decide if it’s a <strong>fraud attempt</strong> or a <strong>legit situation</strong>.</li>
-              <li><strong>Step 3:</strong> Get instant feedback, red flags, and tips.</li>
-            </ul>
-            <p class="wgra-fraud-intro-text">
-              You’ll get a mix of beginner, intermediate, and advanced cases —
-              from fake “Zelle® support” to sketchy investment “guarantees.”
-            </p>
-            <div class="wgra-fraud-start-hint">Tap Start to begin your first case</div>
-            <button type="button" class="wgra-fraud-start-btn" id="wgra-fraud-start-btn">
-              Start Detecting Fraud
-            </button>
-          </div>
+  <div class="review-head">
+    <div class="section-label">Case file</div>
+    <button id="review-toggle" class="text-btn">Expand all</button>
+  </div>
+  <div id="review"></div>
+</main>
 
-          <!-- CASE PANEL -->
-          <div id="wgra-fraud-case-panel" class="wgra-fraud-hidden">
-            <div class="wgra-fraud-meta-row">
-              <div class="wgra-fraud-pill" id="wgra-fraud-difficulty-pill">Beginner Case</div>
-              <div class="wgra-fraud-pill" id="wgra-fraud-type-pill">Text / Message</div>
-              <div class="wgra-fraud-case-count" id="wgra-fraud-case-count">
-                Case 1 of 10
-              </div>
-            </div>
-
-            <div class="wgra-fraud-case-title" id="wgra-fraud-case-title">
-              A strange text about your bank account
-            </div>
-            <div class="wgra-fraud-case-text" id="wgra-fraud-case-text"></div>
-            <ul class="wgra-fraud-case-clues" id="wgra-fraud-case-clues"></ul>
-
-            <div class="wgra-fraud-button-row">
-              <button type="button" class="wgra-fraud-btn wgra-fraud-btn-yes"
-                      id="wgra-fraud-btn-fraud">
-                This is Fraud
-              </button>
-              <button type="button" class="wgra-fraud-btn wgra-fraud-btn-no"
-                      id="wgra-fraud-btn-legit">
-                Looks Legit
-              </button>
-            </div>
-
-            <div class="wgra-fraud-next-row">
-              <button type="button" class="wgra-fraud-next-btn" id="wgra-fraud-next-btn" disabled>
-                Next Case
-              </button>
-            </div>
-
-            <div class="wgra-fraud-progress-wrap">
-              <div class="wgra-fraud-progress-track">
-                <div class="wgra-fraud-progress-bar" id="wgra-fraud-progress-bar"></div>
-              </div>
-              <div class="wgra-fraud-progress-label" id="wgra-fraud-progress-label">
-                0 of 10 cases completed
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- RIGHT PANEL -->
-      <div class="wgra-fraud-panel">
-        <div class="wgra-fraud-panel-inner" id="wgra-fraud-right-panel">
-
-          <div class="wgra-fraud-score-header">Scoreboard</div>
-          <div class="wgra-fraud-score-main" id="wgra-fraud-score-main">
-            0 / 0 correct
-          </div>
-          <div class="wgra-fraud-score-sub" id="wgra-fraud-score-sub">
-            Start the game to begin tracking your detective score.
-          </div>
-
-          <div id="wgra-fraud-feedback-block" class="wgra-fraud-hidden">
-            <div class="wgra-fraud-feedback-tag" id="wgra-fraud-feedback-tag"></div>
-            <div class="wgra-fraud-feedback-title" id="wgra-fraud-feedback-title"></div>
-            <div class="wgra-fraud-feedback-body" id="wgra-fraud-feedback-body"></div>
-            <ul class="wgra-fraud-feedback-list" id="wgra-fraud-feedback-redflags"></ul>
-          </div>
-
-          <div id="wgra-fraud-summary" class="wgra-fraud-summary wgra-fraud-hidden">
-            <div id="wgra-fraud-summary-text"></div>
-
-            <div id="wgra-fraud-results-list" class="wgra-fraud-results-list"></div>
-
-            <div class="wgra-fraud-summary-btn-row">
-              <button type="button" class="wgra-fraud-summary-btn" id="wgra-fraud-restart-btn">
-                Play Again
-              </button>
-              <a href="/contact" class="wgra-fraud-summary-btn">
-                Request a Workshop
-              </a>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
+<!-- BOTTOM ACTION BARS -->
+<div id="bb-home" class="bottom-bar active">
+  <div class="bottom-row">
+    <button id="start-btn" class="btn btn-primary">Start Detecting Fraud</button>
+  </div>
+</div>
+<div id="bb-answer" class="bottom-bar">
+  <div class="bottom-row">
+    <button id="btn-fraud" class="btn btn-fraud" data-answer="fraud">&#9888; This is Fraud</button>
+    <button id="btn-legit" class="btn btn-legit" data-answer="legit">&#10003; Looks Legit</button>
+  </div>
+</div>
+<div id="bb-next" class="bottom-bar">
+  <div class="bottom-row">
+    <button id="next-btn" class="btn btn-primary">Next Case</button>
+  </div>
+</div>
+<div id="bb-results" class="bottom-bar">
+  <div class="bottom-row">
+    <button id="home-btn" class="btn btn-tonal">Home</button>
+    <button id="restart-btn" class="btn btn-primary">Play Again</button>
   </div>
 </div>
 
-<script>
-(function() {
-  const TOTAL_CASES_PER_GAME = 10;
+<!-- SHEETS -->
+<div id="scrim" class="scrim"></div>
 
-  /* =========================
-     BASE CASES (25 patterns)
-     ========================= */
-  const BASE_CASES = [
+<div id="sheet-menu" class="sheet" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="sheet-handle"></div>
+  <button class="menu-item" data-sheet="sheet-about">
+    <svg viewBox="0 0 24 24"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>About
+  </button>
+  <button class="menu-item" data-sheet="sheet-privacy">
+    <svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>Privacy
+  </button>
+  <button class="menu-item" data-sheet="sheet-credits">
+    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>Credits
+  </button>
+</div>
+
+<div id="sheet-about" class="sheet" role="dialog" aria-modal="true" aria-label="About">
+  <div class="sheet-handle"></div>
+  <h3>About</h3>
+  <p>Financial Fraud Detective is a free educational game from WGRALGO / The Wealth Gap Resolution Algorithm&trade; Inc. It helps you practice spotting the money traps that go beyond everyday scam texts: identity theft, car deals, contractors, loans, taxes, benefits, and small-business schemes.</p>
+  <p class="muted">Real fraud schemes change all the time, and these cases are illustrative patterns. Always check a suspicious message through the official channel of the company or agency it claims to be from. Where real companies or agencies are named, it&rsquo;s only as plain educational text.</p>
+  <p class="muted">Financial Fraud Detective v1.1.0. For education and awareness only. Not legal, financial, banking, cybersecurity, or fraud-investigation advice.</p>
+  <button class="btn btn-tonal" data-close>Close</button>
+</div>
+
+<div id="sheet-privacy" class="sheet" role="dialog" aria-modal="true" aria-label="Privacy">
+  <div class="sheet-handle"></div>
+  <h3>Privacy</h3>
+  <p>This app works offline. It does not collect personal data, and all gameplay stays on your device. Your best score is kept only while the app is open.</p>
+  <ul>
+    <li>No ads</li>
+    <li>No account</li>
+    <li>No analytics or trackers</li>
+    <li>No subscription</li>
+    <li>No cloud sync or backend server</li>
+    <li>No INTERNET permission</li>
+  </ul>
+  <button class="btn btn-tonal" data-close>Close</button>
+</div>
+
+<div id="sheet-credits" class="sheet" role="dialog" aria-modal="true" aria-label="Credits">
+  <div class="sheet-handle"></div>
+  <h3>Credits</h3>
+  <p>Created and maintained by <strong>WGRALGO / The Wealth Gap Resolution Algorithm&trade; Inc.</strong></p>
+  <ul>
+    <li>Project direction, testing, and public release decisions by <strong>Richard &ldquo;Rich&rdquo; BlackMan / WGRALGO</strong>.</li>
+    <li>Original web concept and educational content assistance by <strong>ChatGPT by OpenAI</strong>.</li>
+    <li>Android APK build, source cleanup, and GitHub packaging assistance by <strong>Claude Code by Anthropic</strong>.</li>
+  </ul>
+  <p class="muted">Free and open source under the GNU General Public License v3.0.</p>
+  <button class="btn btn-tonal" data-close>Close</button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var TOTAL_CASES_PER_GAME = 10;
+  // Per answer type: 2 beginner + 2 intermediate + 1 advanced, so 5 fraud + 5 legit = 4/4/2 overall
+  var MIX = { Beginner: 2, Intermediate: 2, Advanced: 1 };
+
+  /* =====================================================================
+     CASE LIBRARY
+     Evidence is shown "raw" (what you'd actually see). Red flags are only
+     revealed after answering, so the wording never gives the answer away.
+       ev.kind: sms | email | call | dm | web | scene | letter
+     ===================================================================== */
+  var CASES = [
+    /* =========================== FRAUD — BEGINNER =========================== */
     {
-      difficulty: "Beginner",
-      type: "Text / Message",
-      title: "“Urgent: Zelle® transfer problem”",
-      scenario: "You get a text: \"URGENT: Your recent Zelle® transfer failed. Click here to re-verify your account or your bank access will be locked in 30 minutes\" with a link that does NOT match your bank’s website.",
-      clues: [
-        "The message is threatening: \"your access will be locked in 30 minutes.\"",
-        "The link doesn’t match your bank’s official website address.",
-        "You didn’t just try to send a Zelle® payment."
-      ],
-      correct: "fraud",
-      explanation: "Real banks and Zelle® do not threaten to shut down your account through random text links. This is a classic phishing attempt to steal logins or access to your account.",
-      redFlags: [
-        "Urgent time limit to scare you into reacting quickly.",
-        "Link that looks different from your real bank URL.",
-        "You didn’t start the action they’re talking about."
-      ]
+      difficulty: "Beginner", cat: "Cards & checks", type: "In person", correct: "fraud",
+      title: "The gas pump at the end of the row",
+      ev: { kind: "scene", label: "At the gas station", body: [
+        "The pump farthest from the store has a card reader that sticks out a little more than the others and wiggles when you touch it.",
+        "The security sticker on the pump’s cabinet door is torn and says “VOID.” The other pumps’ stickers are smooth."
+      ]},
+      context: "You’re in a hurry and this is the only open pump.",
+      explanation: "These are signs of a card skimmer: a hidden device that copies your card as you swipe it. Thieves like pumps far from the cashier, where no one is watching.",
+      flags: ["A card reader that’s bulky, loose, or looks different from the others.", "A broken or “VOID” security seal on the cabinet.", "A pump far from the store’s view."],
+      action: "Use another pump or pay inside, and tell the cashier. Tap-to-pay or paying with a credit card (not debit) adds protection."
     },
     {
-      difficulty: "Beginner",
-      type: "Phone Call",
-      title: "“This is the IRS – pay now or go to jail”",
-      scenario: "Someone calls saying they are from the IRS, claiming you owe back taxes. They say you must pay immediately over the phone with gift cards or you will be arrested.",
-      clues: [
-        "Demanding payment on the spot over the phone.",
-        "Insisting on gift cards as the only payment method.",
-        "Threatening jail if you don’t pay immediately."
-      ],
-      correct: "fraud",
-      explanation: "Government agencies like the IRS do not call demanding immediate payment by gift card, nor do they threaten arrest over the phone like this.",
-      redFlags: [
-        "Pressure, fear, and threats of arrest.",
-        "Weird payment methods like gift cards or crypto.",
-        "Refusal to let you hang up and call back through an official number."
-      ]
+      difficulty: "Beginner", cat: "Cards & checks", type: "In person", correct: "fraud",
+      title: "A second card reader at dinner",
+      ev: { kind: "scene", label: "At a restaurant", body: [
+        "Your server takes your debit card to the back. Through the kitchen doorway you see them swipe it through a small black device clipped to their belt, then through the restaurant’s card machine.",
+        "When they return, they ask if you’d like to “just tell me the PIN so I can finish it up for you.”"
+      ]},
+      explanation: "A restaurant only needs one card reader. A pocket device swiped out of sight is a handheld skimmer, and no business should ever ask for your PIN out loud.",
+      flags: ["Your card was swiped through an extra, personal device.", "The card left your sight.", "You were asked to say your PIN."],
+      action: "Don’t give the PIN. Ask for the manager, call your bank using the number on your card, and ask for a new card. Ask for the card reader to be brought to your table next time."
     },
     {
-      difficulty: "Beginner",
-      type: "Email",
-      title: "“Your bank statement is ready”",
-      scenario: "You receive an email from your bank’s exact domain name, with your real name and the last four digits of your account. It tells you your monthly statement is ready and to log in through the bank’s regular website or mobile app.",
-      clues: [
-        "No login link — they tell you to log in the usual way.",
-        "The sender’s email matches your bank’s official domain.",
-        "No requests for personal details, just an informational notice."
-      ],
-      correct: "legit",
-      explanation: "This looks like a standard account notice with no pressure, no strange links, and no request for sensitive info. Typing your bank’s URL manually is still safest.",
-      redFlags: []
+      difficulty: "Beginner", cat: "Loans", type: "Text message", correct: "fraud",
+      title: "Guaranteed approval, bad credit OK",
+      ev: { kind: "sms", from: "QuickCash Lending", msgs: [
+        "Great news! You’re APPROVED for a $5,000 personal loan. Bad credit OK, no credit check! 💵",
+        "To release your funds today, pay the one-time $150 loan insurance fee with a Visa gift card. Text us the card number and PIN."
+      ]},
+      context: "You filled out an online form last week asking about loans.",
+      explanation: "This is an advance-fee loan scam. Real lenders may take a fee out of the loan itself, but they never ask you to pay first with a gift card. Once you send the fee, the “loan” never comes.",
+      flags: ["“Guaranteed” approval with no credit check.", "A fee you must pay before getting the money.", "Payment by gift card."],
+      action: "Don’t pay. Check that a lender is licensed with your state’s financial regulator, and look at your local credit union first."
     },
     {
-      difficulty: "Intermediate",
-      type: "Social Media DM",
-      title: "“Instant credit repair for a one-time fee”",
-      scenario: "A stranger messages you on social media saying they are a \"credit specialist\" who can wipe negative items from your report in 24 hours for a one-time $300 fee paid by Cash App.",
-      clues: [
-        "Guarantees unrealistic results in 24 hours.",
-        "Demands payment upfront through a person-to-person app.",
-        "No business name, website, or written contract."
-      ],
-      correct: "fraud",
-      explanation: "Legitimate credit services cannot legally promise to erase accurate negative information overnight, especially via DMs and Cash App only.",
-      redFlags: [
-        "Unrealistic promise: clean credit in 24 hours.",
-        "Upfront fee with no contract or disclosures.",
-        "No way to verify licenses, location, or reputation."
-      ]
+      difficulty: "Beginner", cat: "Benefits", type: "Text message", correct: "fraud",
+      title: "Your food benefits card is locked",
+      ev: { kind: "sms", from: "+1 (571) 555-0164", msgs: [
+        "SNAP ALERT: Your EBT card has been LOCKED due to suspicious activity. To unlock and keep your benefits, reply with your 16-digit card number and 4-digit PIN."
+      ]},
+      context: "You get SNAP benefits on an EBT card every month.",
+      explanation: "State benefit agencies never text you to ask for your card number and PIN. With both, a thief can drain your benefits in minutes, and stolen benefits are often hard to get replaced.",
+      flags: ["Asks for your full card number AND your PIN.", "Comes from an unknown phone number.", "Uses fear: “keep your benefits.”"],
+      action: "Don’t reply. Call the customer service number on the back of your EBT card, or use your state’s official EBT app to check and lock your card."
     },
     {
-      difficulty: "Intermediate",
-      type: "Online Marketplace",
-      title: "“Overpayment for your online sale”",
-      scenario: "You sell a used laptop online for $300. The buyer mails a check for $1,500 and says, \"Deposit this, keep an extra $100, and send the rest back using a money transfer app.\"",
-      clues: [
-        "Check is much larger than the sale price.",
-        "They want money back before the check fully clears.",
-        "They try to reward you for helping with the “mistake”."
-      ],
-      correct: "fraud",
-      explanation: "This is an overpayment scam. The check will bounce later, but the money you send out will be gone for good.",
-      redFlags: [
-        "Unnecessary overpayment with a request to send money back.",
-        "Pressure to move funds before the bank confirms the check.",
-        "Overcomplicated story for a simple sale."
-      ]
+      difficulty: "Beginner", cat: "Home & contractors", type: "In person", correct: "fraud",
+      title: "A roofer knocks after the storm",
+      ev: { kind: "call", caller: "At your front door, the day after a hailstorm", lines: [
+        ["Roofer", "We’re working on a few houses on your street. I can see hail damage on your roof from here."],
+        ["Roofer", "I can start tomorrow, but I need half the cost in cash today to order materials. Sign here and we’ll handle your insurance company for you."]
+      ]},
+      context: "The truck has out-of-state plates and no company name on it.",
+      explanation: "“Storm chasers” show up after bad weather, take a big cash deposit, and disappear or do poor work. Signing papers that let them “handle your insurance” can give away control of your claim.",
+      flags: ["Showed up uninvited right after a storm.", "Large cash deposit up front.", "Pressure to sign today.", "No local address, license, or company name."],
+      action: "Call your insurance company first. Get written bids from licensed local contractors, check their license on your state’s website, and never pay most of the cost before the work is done."
     },
     {
-      difficulty: "Intermediate",
-      type: "Job Offer",
-      title: "“Work-from-home check deposit job”",
-      scenario: "You get hired quickly for a remote job. On day one, they mail you a check and tell you to deposit it, keep a small amount, and send the rest to vendors using Zelle® and gift cards.",
-      clues: [
-        "No interview or real screening process.",
-        "You’re asked to move money using personal accounts.",
-        "Payment is sent before any real work is done."
-      ],
-      correct: "fraud",
-      explanation: "This is a money-mule scam. They are using your bank account to move stolen or fake funds. You can be left owing the bank money or facing legal trouble.",
-      redFlags: [
-        "Job duties focus on moving money, not actual tasks.",
-        "They insist on quick transfers before checks clear.",
-        "Everything happens fast with little paperwork."
-      ]
+      difficulty: "Beginner", cat: "Credit & debt", type: "Direct message", correct: "fraud",
+      title: "A credit specialist in your DMs",
+      ev: { kind: "dm", platform: "Instagram", from: "@creditfixqueen_official", msgs: [
+        "Hey hun! Saw your post about getting denied for that apartment 😩",
+        "I can delete ALL your collections and late payments in 24 hrs. One-time $300 via Cash App and you’ll be at 750+ by Friday. 💯"
+      ]},
+      explanation: "No one can legally remove accurate negative information from your credit report, especially in 24 hours. Under federal law, credit repair companies can’t charge you until they’ve done the work.",
+      flags: ["Promise to delete everything, including accurate information.", "Payment up front through an app.", "No business name or written contract.", "Contacted you because of something you posted."],
+      action: "You can dispute real errors yourself, for free, directly with Equifax, Experian, and TransUnion."
     },
     {
-      difficulty: "Intermediate",
-      type: "Investment Pitch",
-      title: "“Guaranteed 20% return every week”",
-      scenario: "A contact says they’re in a private investment group that \"guarantees 20% profit every week\" if you send crypto to a wallet. They show screenshots of big returns but no official statements.",
-      clues: [
-        "Promise of guaranteed, very high returns.",
-        "They want crypto, which is hard to reverse.",
-        "No independent documentation or regulation details."
-      ],
-      correct: "fraud",
-      explanation: "Any investment that \"guarantees\" huge returns with no risk and no documentation is almost certainly a scam.",
-      redFlags: [
-        "Guaranteed profits and double-digit weekly returns.",
-        "No audited statements or licensed advisor.",
-        "Strong FOMO pressure: \"don’t miss out\"."
-      ]
+      difficulty: "Beginner", cat: "Cars", type: "Email", correct: "fraud",
+      title: "A great deal from a soldier selling his truck",
+      ev: { kind: "email", from: "Sgt. Mike Reynolds <mike.reynolds.us.army@outlook.com>", subject: "RE: 2021 pickup — still available", body: [
+        "Yes, it’s available for $9,500. I’m being deployed next week so I need it sold fast. The truck is already at a shipping company.",
+        "To protect us both, pay through the “eBay Motors Buyer Protection” agent with gift cards. They hold the money until you approve the truck."
+      ]},
+      context: "The same truck usually sells for about $24,000.",
+      explanation: "This is a fake car listing. A sad story explains why you can’t see the vehicle, and a fake “buyer protection” agent collects your money. Real marketplaces never take payment in gift cards.",
+      flags: ["Price far below what the vehicle is worth.", "You can’t see or test-drive it.", "A company’s name used to make the deal seem safe.", "Payment in gift cards."],
+      action: "Only buy a car you can see, have inspected, and pay for in person, ideally at your bank."
     },
     {
-      difficulty: "Beginner",
-      type: "In-Person Purchase",
-      title: "“Using your debit card at a grocery store”",
-      scenario: "You use your debit card at your regular grocery store, at the same chip reader you’ve used for years. The cashier doesn’t ask for anything extra beyond your PIN or tap-to-pay.",
-      clues: [
-        "Familiar store and checkout process.",
-        "No one asks for your PIN verbally or for your banking login.",
-        "You initiated the transaction at the register."
-      ],
-      correct: "legit",
-      explanation: "Everyday card use at a known business, with normal checkout steps, is typically legitimate. Still, cover your PIN and watch statements.",
-      redFlags: []
+      difficulty: "Beginner", cat: "Taxes", type: "In person", correct: "fraud",
+      title: "The tax shop that promises the biggest refund",
+      ev: { kind: "scene", label: "A pop-up tax office", body: [
+        "A storefront tax office that opened in January promises “the BIGGEST refund in town.” Their fee is 25% of whatever your refund is.",
+        "The preparer says they’ll file for you but won’t sign the return or put their name on it. The refund will go into their bank account first, and they’ll pay you after taking their cut."
+      ]},
+      explanation: "The IRS calls this a “ghost preparer.” Paid preparers are required to sign returns and include their preparer ID number. Someone who won’t sign, and takes a cut of your refund, may be adding false information that YOU will be responsible for.",
+      flags: ["Refuses to sign the return.", "Fee based on the size of your refund.", "Refund goes to their account, not yours.", "Promises a big refund before seeing your paperwork."],
+      action: "Use a preparer who signs the return and has an IRS preparer ID (PTIN), or get free help at an IRS-certified VITA site if you qualify."
+    },
+
+    /* ========================= FRAUD — INTERMEDIATE ========================= */
+    {
+      difficulty: "Intermediate", cat: "Credit & debt", type: "Phone call", correct: "fraud",
+      title: "A program to cut your debt by 70%",
+      ev: { kind: "call", caller: "Caller ID: National Debt Relief Center", lines: [
+        ["Caller", "Under a new government program, we can cut your credit card debt by up to 70%."],
+        ["Caller", "Stop paying your cards right away and send us $499 today to enroll. We’ll negotiate with your creditors for you."]
+      ]},
+      explanation: "There’s no government program that wipes out credit card debt. When debt relief is sold by phone, federal rules ban fees before they actually settle a debt. Meanwhile, stopping payments wrecks your credit and adds late fees.",
+      flags: ["Claims to be a government program.", "Fee required up front.", "Tells you to stop paying your creditors.", "Promises a specific huge reduction."],
+      action: "Hang up. Contact a nonprofit credit counseling agency (look for NFCC membership) or call your card company directly to ask about hardship plans."
     },
     {
-      difficulty: "Advanced",
-      type: "Email & Website",
-      title: "“Subtle fake bank login page”",
-      scenario: "You receive an email that looks like it’s from your bank saying, \"We’ve updated our terms. Please log in to review.\" The link domain is \"mybank-security.com\" instead of your bank’s official domain, but the page design looks identical.",
-      clues: [
-        "The domain is slightly different from your real bank URL.",
-        "The email pushes you to click the link instead of telling you to log in the normal way.",
-        "The timing is unexpected."
-      ],
-      correct: "fraud",
-      explanation: "This is a phishing site designed to steal your login. Even small differences in the web address are a major red flag.",
-      redFlags: [
-        "Look-alike domain name with extra words or dashes.",
-        "Email urges clicking instead of going to your usual URL.",
-        "No other alerts or verification from the bank."
-      ]
+      difficulty: "Intermediate", cat: "Cars", type: "Text message", correct: "fraud",
+      title: "A buyer for your car shows up Friday night",
+      ev: { kind: "sms", from: "Buyer (Tyler)", msgs: [
+        "My courier is outside with a cashier’s check for the full $11,000. 👍",
+        "He needs you to sign the title and hand over the keys tonight. I’m leaving for a job out of state in the morning."
+      ]},
+      context: "It’s 7:30 p.m. on a Friday. Your bank is closed until Monday.",
+      explanation: "Fake cashier’s checks look real. By the time your bank finds out the check is fake, the car and the signed title are long gone. The timing is chosen so you can’t check the check.",
+      flags: ["Pressure to hand over the title before the bank can check the check.", "A “courier” instead of the buyer.", "The timing makes it hard to confirm anything.", "A last-minute travel story."],
+      action: "Meet the buyer at their bank during business hours, watch the teller print the check, or wait until the funds fully clear. Call the issuing bank using a number you look up yourself."
     },
     {
-      difficulty: "Advanced",
-      type: "Romance",
-      title: "“Online partner asking for a wire transfer”",
-      scenario: "You’ve been messaging someone for months who says they live overseas. They now claim there’s an emergency surgery and ask you to wire $4,000 because their accounts are frozen. They promise to pay you back once they access their \"inheritance.\"",
-      clues: [
-        "You have never met them in person.",
-        "The emergency appears when they ask for money.",
-        "They ask for a large wire transfer to a foreign account."
-      ],
-      correct: "fraud",
-      explanation: "This matches a common romance scam pattern. Scammers build emotional trust, then create a crisis to get large sums of money.",
-      redFlags: [
-        "Relationship exists only online.",
-        "Dramatic crisis tied to a big money request.",
-        "Vague future repayment from \"inheritance\" or \"frozen funds\"."
-      ]
+      difficulty: "Intermediate", cat: "Cars", type: "In person", correct: "fraud",
+      title: "Selling a car for a cousin",
+      ev: { kind: "scene", label: "A grocery store parking lot", body: [
+        "The seller of a used SUV says, “I’m selling it for my cousin.” The name on the title isn’t his, and the title was issued in another state two months ago.",
+        "He says a mechanic inspection “isn’t necessary.” When you search his phone number, it appears on four other car listings."
+      ]},
+      explanation: "This is “curbstoning”: an unlicensed dealer posing as a private seller to unload cars that often have hidden damage, such as flood cars whose history was cleaned up by re-titling in another state.",
+      flags: ["The title isn’t in the seller’s name.", "A recent title from another state.", "Won’t allow an independent inspection.", "Same phone number on many listings."],
+      action: "Buy only from the person named on the title, run a vehicle history report, and pay a mechanic to inspect any used car first."
     },
     {
-      difficulty: "Advanced",
-      type: "Business Email",
-      title: "“Vendor changing bank details by email only”",
-      scenario: "Your small business receives an email that appears to be from a regular vendor, saying their bank account has changed and to send all future payments to a new account number. The email address has one letter different from the usual.",
-      clues: [
-        "Bank details are changing with no phone call or official letter.",
-        "The sender’s email is almost the same, but slightly off.",
-        "They insist you use the new details for the very next payment."
-      ],
-      correct: "fraud",
-      explanation: "Business email compromise scammers impersonate vendors and quietly change payment instructions to steal funds.",
-      redFlags: [
-        "Subtle changes in the email address.",
-        "Sensitive changes sent only by email.",
-        "Urgency to use the new account immediately."
-      ]
+      difficulty: "Intermediate", cat: "Immigration & legal", type: "In person", correct: "fraud",
+      title: "A notario promises a fast green card",
+      ev: { kind: "scene", label: "A storefront office", body: [
+        "A sign reads “Notario Público — Immigration Services.” The man inside says he has a friend at immigration and can get your green card in 3 months.",
+        "He wants $3,000 in cash and your original passport and birth certificate. He doesn’t give you a written contract."
+      ]},
+      explanation: "In the U.S., a notary public is NOT a lawyer and can’t give immigration advice. “Notario” fraud can cost people their money, their documents, and even their immigration cases.",
+      flags: ["A notary offering legal advice.", "Promises a guaranteed result and inside connections.", "Wants to keep your original documents.", "Cash with no written contract."],
+      action: "Only use a licensed immigration attorney or a DOJ-accredited representative at a recognized nonprofit. Keep your original documents and get copies of everything filed."
     },
     {
-      difficulty: "Intermediate",
-      type: "Debt Collection",
-      title: "“Debt collector willing to send validation”",
-      scenario: "You receive a call from a debt collector. When you ask for written validation of the debt, they agree and say they will mail a letter and do not pressure you to pay on the spot.",
-      clues: [
-        "They agree to send written validation.",
-        "No demand for immediate payment or unusual methods.",
-        "They don’t threaten arrest or violence."
-      ],
-      correct: "legit",
-      explanation: "While not all collectors behave well, a collector who sends validation and skips pressure tactics is behaving more like a legitimate agency. You still have the right to dispute.",
-      redFlags: []
+      difficulty: "Intermediate", cat: "Identity theft", type: "Letter by mail", correct: "fraud",
+      title: "Your insurance paid for an MRI",
+      ev: { kind: "letter", from: "BlueRiver Health Plan — Explanation of Benefits (This is not a bill)", body: [
+        "Service: MRI, lower back. Provider: Westgate Imaging Center. Date: March 14. Amount billed: $1,860. Plan paid: $1,488.",
+        "You owe: $372."
+      ]},
+      context: "You’ve never been to Westgate Imaging and you’ve never had an MRI.",
+      explanation: "This is medical identity theft. Someone used your insurance information to get care, or a provider billed for services that never happened. It can mix false information into your medical records and use up your benefits.",
+      flags: ["A service you never received.", "A provider you’ve never visited.", "A charge you’re now being asked to pay."],
+      action: "Call your health plan’s fraud line (on your insurance card) right away. Ask the provider for your records, and keep reading every Explanation of Benefits."
     },
     {
-      difficulty: "Beginner",
-      type: "Text / Message",
-      title: "“You’ve won a gift card you never entered for”",
-      scenario: "You get a text saying you’ve won a $500 store gift card, even though you don’t remember entering any contest. They want you to click a link and type in your card number \"to claim the prize.\"",
-      clues: [
-        "You don’t remember entering a contest.",
-        "They ask for card details to claim a prize.",
-        "Pressure to click a random link."
-      ],
-      correct: "fraud",
-      explanation: "\"You’ve won\" messages that ask for card info are usually phishing or prize scams.",
-      redFlags: [
-        "Unsolicited prize with no entry.",
-        "Requests for payment card or bank info.",
-        "Random link instead of official site."
-      ]
+      difficulty: "Intermediate", cat: "Identity theft", type: "Letter by mail", correct: "fraud",
+      title: "Thanks for applying for a car loan",
+      ev: { kind: "letter", from: "Summit Auto Finance", body: [
+        "Thank you for your application for a $12,400 auto loan. Unfortunately, we are unable to approve your request at this time.",
+        "Your credit score used in this decision was 612."
+      ]},
+      context: "You haven’t applied for any loan or shopped for a car.",
+      explanation: "Someone has used your personal information to apply for credit in your name. This time it was denied, but they may try other lenders.",
+      flags: ["A loan application you never made.", "A lender you’ve never contacted."],
+      action: "Freeze your credit at all three bureaus, report it at IdentityTheft.gov for a recovery plan, and call the lender’s fraud department using a number you look up yourself."
     },
     {
-      difficulty: "Beginner",
-      type: "Utility Bill",
-      title: "“Power company calling about a late bill”",
-      scenario: "Someone calls claiming to be from your electric company, saying your bill is one month late and asking you to log in online or call the number printed on your last paper bill to pay.",
-      clues: [
-        "They don’t ask for payment over the phone.",
-        "They direct you to your usual bill or website.",
-        "No threats of arrest, just a reminder."
-      ],
-      correct: "legit",
-      explanation: "Legit companies often send reminders, but directing you to the normal payment channel (not a strange link or gift cards) is a good sign.",
-      redFlags: []
+      difficulty: "Intermediate", cat: "Small business", type: "Letter by mail", correct: "fraud",
+      title: "Your business’s annual compliance form",
+      ev: { kind: "letter", from: "Corporate Records Compliance Service", body: [
+        "ANNUAL MINUTES DISCLOSURE STATEMENT — DUE WITHIN 15 DAYS",
+        "To remain compliant with state law, return this form with a $243 processing fee. Failure to respond may result in loss of good standing for your LLC."
+      ]},
+      context: "The letter uses an official-looking seal, but it doesn’t come from your state’s Secretary of State.",
+      explanation: "Private companies mail official-looking “compliance” notices to new businesses, hoping owners pay fees that aren’t required. Your real state filings are done directly with your state, usually for much less.",
+      flags: ["A private company that sounds like a government office.", "A short deadline and threats about your standing.", "A fee for something the state doesn’t require from them."],
+      action: "Check your filing requirements on your Secretary of State’s official .gov website and file there directly."
     },
     {
-      difficulty: "Intermediate",
-      type: "Grant / Scholarship",
-      title: "“Guaranteed government grant if you pay a fee”",
-      scenario: "A caller says you qualify for a \"free government grant\" but must first pay a $150 \"processing fee\" with prepaid cards to release the funds.",
-      clues: [
-        "They say the grant is guaranteed.",
-        "They demand a fee up front with prepaid cards.",
-        "No application, documents, or official website."
-      ],
-      correct: "fraud",
-      explanation: "Government grants do not require upfront fees paid on prepaid cards.",
-      redFlags: [
-        "Upfront \"processing\" or \"release\" fees.",
-        "Payment by prepaid or gift cards.",
-        "No written paperwork or official site."
-      ]
+      difficulty: "Intermediate", cat: "Credit & debt", type: "Website", correct: "fraud",
+      title: "A brand-new credit file for $150",
+      ev: { kind: "web", url: "newcreditstart-cpn.com", body: [
+        "Bad credit? Get a CPN — a Credit Privacy Number! Use it instead of your Social Security number on credit applications.",
+        "100% LEGAL. Brand-new credit file with no history. Only $150. Instant delivery."
+      ]},
+      explanation: "A “CPN” is not a legal substitute for your Social Security number. They’re often stolen SSNs, sometimes belonging to children. Using one on a credit application is a federal crime, and you lose your $150 too.",
+      flags: ["Claims you can avoid using your SSN on credit applications.", "“100% legal” promises.", "A fresh start for a small fee."],
+      action: "Rebuild credit the real way: a secured card or credit-builder loan from a credit union, plus on-time payments. Nonprofit credit counselors can help for free or low cost."
+    },
+
+    /* =========================== FRAUD — ADVANCED =========================== */
+    {
+      difficulty: "Advanced", cat: "Identity theft", type: "Phone & email", correct: "fraud",
+      title: "Your phone suddenly says “No Service”",
+      ev: { kind: "scene", label: "Your phone and laptop", body: [
+        "Your phone has shown “No Service” for the past hour, even though your partner’s phone on the same carrier works fine.",
+        "Now your laptop shows two new emails: “Your password was changed” and “New device signed in to your bank account.”"
+      ]},
+      explanation: "This is a SIM swap. A thief convinced your phone carrier to move your number to their phone, so now they get your texts and sign-in codes. They use them to break into your email and bank accounts.",
+      flags: ["Your phone loses service for no reason.", "Others on the same carrier are fine.", "Password-change and new-device alerts you didn’t trigger."],
+      action: "Contact your carrier immediately from another phone or a store. Then call your bank and change your email password. Afterward, add a port-out PIN or number lock with your carrier."
     },
     {
-      difficulty: "Intermediate",
-      type: "Rental / Housing",
-      title: "“Landlord wants deposit in gift cards”",
-      scenario: "A landlord says you must pay your security deposit and first month’s rent using gift cards before you can see the apartment.",
-      clues: [
-        "Payment requested before a tour or lease.",
-        "Gift cards instead of normal rent methods.",
-        "Refuses to meet in person first."
-      ],
-      correct: "fraud",
-      explanation: "Legitimate landlords don’t demand rent in gift cards, especially before a viewing or signed lease.",
-      redFlags: [
-        "Unusual payment methods for rent.",
-        "No in-person meeting or lease.",
-        "Pressure to pay quickly or lose the unit."
-      ]
+      difficulty: "Advanced", cat: "Home & property", type: "Email", correct: "fraud",
+      title: "A new deed on Aunt Rose’s house",
+      ev: { kind: "email", from: "Cedar County Recorder <propertyalert@cedarcounty.gov>", subject: "Property Fraud Alert: document recorded", body: [
+        "A document has been recorded under the name ROSE M. TURNER.",
+        "Document type: Warranty Deed (transfer of ownership). Property: 418 Linden St. Recorded: yesterday."
+      ]},
+      context: "Your aunt owns this paid-off rental house. She signed you up for free county alerts, and she has never talked about selling it.",
+      explanation: "This alert is real, but what it shows is fraud: someone has recorded a deed transferring your aunt’s house without her knowledge. Thieves target paid-off homes and vacant land so they can sell them or borrow against them.",
+      flags: ["An ownership transfer the owner never agreed to.", "The house is paid off and not lived in by the owner, which thieves target.", "Recorded without any sale or closing."],
+      action: "Call the county recorder and local police right away, then contact a real estate attorney. Owners can also alert their title insurance company."
     },
     {
-      difficulty: "Intermediate",
-      type: "Cash App / P2P",
-      title: "“Cash App flip – send $100, get $1,000”",
-      scenario: "On social media, someone advertises a \"Cash App flip\" where you send them $100 and they send back $1,000. They post screenshots of big payouts.",
-      clues: [
-        "Promise to multiply your money instantly.",
-        "They want person-to-person payments.",
-        "No business name or license."
-      ],
-      correct: "fraud",
-      explanation: "Cash App flips are classic scams. Once you send money, it’s usually gone.",
-      redFlags: [
-        "Too-good-to-be-true returns.",
-        "No explanation of how it works.",
-        "Only proof is screenshots."
-      ]
+      difficulty: "Advanced", cat: "Small business", type: "Letter by mail", correct: "fraud",
+      title: "Renew your trademark in the global registry",
+      ev: { kind: "letter", from: "Global Trademark Registry Office", body: [
+        "Your U.S. trademark registration No. 6,214,870 is listed below. To record it in our international publication and protect it worldwide, return payment of $1,650 within 30 days.",
+        "Fine print on the back: “This is a solicitation for services. This is not a bill.”"
+      ]},
+      context: "The letter correctly lists your trademark number and filing date, which are public records.",
+      explanation: "Private companies copy public trademark records and send official-looking “registry” notices. Paying gives you nothing that protects your trademark. Real USPTO notices come from the USPTO, and their emails end in @uspto.gov.",
+      flags: ["A registry name that sounds official but isn’t the USPTO.", "“Not a bill” hidden in the fine print.", "A large fee for a listing with no legal effect."],
+      action: "Check your trademark’s real status and deadlines on the USPTO website. The USPTO keeps a public list of these misleading notices."
     },
     {
-      difficulty: "Intermediate",
-      type: "Charity",
-      title: "“Charity call after a disaster”",
-      scenario: "Right after a natural disaster, someone calls asking for donations for \"relief\" but can’t clearly state the charity’s full name or website. They ask for card details over the phone.",
-      clues: [
-        "Can’t clearly identify the organization.",
-        "Pressure to give card numbers immediately.",
-        "No option to donate through a known site."
-      ],
-      correct: "fraud",
-      explanation: "Scammers often use disasters to collect money using fake charity names.",
-      redFlags: [
-        "Vague organization identity.",
-        "Immediate pressure for card details.",
-        "No official website or registration."
-      ]
+      difficulty: "Advanced", cat: "Identity theft", type: "Letter by mail", correct: "fraud",
+      title: "Credit card offers for your 12-year-old",
+      ev: { kind: "letter", from: "Mail addressed to your son, age 12", body: [
+        "Envelope 1: “Congratulations, Jaylen! You’re pre-approved for a Platinum Rewards Card.”",
+        "Envelope 2: “Final notice from Apex Recovery: Your account balance of $2,317 is past due.”"
+      ]},
+      explanation: "Children shouldn’t have credit at all, so credit offers and collection letters in their name mean someone is using their identity. Child identity theft often isn’t discovered until years later, when the child applies for school loans or a first job.",
+      flags: ["Credit offers addressed to a minor.", "A collection notice for a debt that couldn’t be theirs.", "Mail that suggests a credit file already exists."],
+      action: "Ask each credit bureau to check for a credit file in your child’s name, report it at IdentityTheft.gov, and place a free credit freeze for your child."
     },
     {
-      difficulty: "Beginner",
-      type: "Bank ATM",
-      title: "“Withdrawing cash at your bank’s ATM”",
-      scenario: "You withdraw cash from an ATM attached to your normal bank branch, during business hours, and no one is hovering nearby.",
-      clues: [
-        "Official bank ATM at a branch.",
-        "No one watching you closely.",
-        "You initiated the transaction."
-      ],
-      correct: "legit",
-      explanation: "Using a bank’s own ATM in a visible location is usually safe. Still, cover your PIN and be aware of your surroundings.",
-      redFlags: []
+      difficulty: "Advanced", cat: "Small business", type: "Email", correct: "fraud",
+      title: "Register for government contracts — $350",
+      ev: { kind: "email", from: "Federal Vendor Registration Services <renew@samregistration-support.com>", subject: "URGENT: Your SAM registration expires in 5 days", body: [
+        "Your business’s SAM.gov registration is about to expire. Expired registrations cannot receive federal contracts or grants.",
+        "Our processing team will renew it for you for $350. Click below to pay and keep your Unique Entity ID active."
+      ]},
+      context: "Your small business bids on government contracts, and your registration really is due next month.",
+      explanation: "Registering and renewing on SAM.gov is always free. Third-party sites copy public data to find businesses near their renewal date and charge for something you can do yourself in minutes.",
+      flags: ["Not a sam.gov email address.", "Charges for a free government service.", "A short deadline and threats about losing contracts."],
+      action: "Renew directly at SAM.gov. If you need help, free assistance is available through the government’s APEX Accelerators."
     },
     {
-      difficulty: "Advanced",
-      type: "Tech Support",
-      title: "“Pop-up saying your computer is infected”",
-      scenario: "A full-screen pop-up claims your computer is infected and tells you to call a phone number to \"unlock\" your device. The pop-up beeps and flashes.",
-      clues: [
-        "Random pop-up, not from your antivirus.",
-        "Demands you call a number.",
-        "Uses fear and urgency."
-      ],
-      correct: "fraud",
-      explanation: "Fake tech support pop-ups try to scare you into calling so scammers can charge you or take over your device.",
-      redFlags: [
-        "Browser pop-up, not your own security software.",
-        "Pressure to call immediately.",
-        "Asking for remote access or payment."
-      ]
+      difficulty: "Advanced", cat: "Taxes", type: "Phone call", correct: "fraud",
+      title: "Your business qualifies for a big tax credit",
+      ev: { kind: "call", caller: "Caller ID: Business Tax Recovery Partners", lines: [
+        ["Caller", "Most small businesses qualify for up to $26,000 per employee from a pandemic-era payroll tax credit. We don’t need to look at your records to know you qualify."],
+        ["Caller", "We file it all for you. Our fee is just 25% of whatever the IRS sends you. Sign today, before the window closes."]
+      ]},
+      explanation: "The IRS has warned about aggressive promoters of pandemic-era business tax credits. They file claims that don’t qualify and take a large cut. When the IRS later rejects the claim, the business owner owes the money back plus penalties and interest, not the promoter.",
+      flags: ["Says you qualify without checking your records.", "Fee based on a percentage of the refund.", "Pressure to sign quickly.", "Cold call from a company you didn’t contact."],
+      action: "Ask a trusted CPA or enrolled agent, checked with your state or the IRS, whether your business really qualifies before filing anything."
     },
     {
-      difficulty: "Intermediate",
-      type: "Student Loans",
-      title: "“Instant student loan forgiveness for a fee”",
-      scenario: "You get a robocall offering instant student loan forgiveness if you pay a $250 enrollment fee today.",
-      clues: [
-        "Robocall with generic greeting.",
-        "Upfront fee to access forgiveness.",
-        "Pressure to act immediately."
-      ],
-      correct: "fraud",
-      explanation: "Legit federal programs don’t charge enrollment fees through random robocalls.",
-      redFlags: [
-        "Upfront fees for supposed government benefits.",
-        "No official website or paperwork.",
-        "\"Today only\" urgency."
-      ]
+      difficulty: "Advanced", cat: "Cars", type: "In person", correct: "fraud",
+      title: "The finance office says it’s required",
+      ev: { kind: "call", caller: "At the dealership, in the finance office", lines: [
+        ["Finance manager", "Your payment comes out to $512 a month. Just sign here, here, and here."],
+        ["You", "The salesperson said about $460. What’s this $3,200 for GAP coverage, a service contract, and window etching?"],
+        ["Finance manager", "Oh, those are required by the bank to approve your loan. Everybody pays them."]
+      ]},
+      explanation: "This is called “payment packing.” Add-ons like GAP coverage, service contracts, and etching are usually optional. Saying the lender requires them when it doesn’t is deceptive, and it can add thousands of dollars, plus interest, to your loan.",
+      flags: ["Add-ons you didn’t ask for already in the contract.", "Claims they’re “required” by the lender.", "A payment higher than you were quoted.", "Pressure to sign quickly."],
+      action: "Ask for a written price for each add-on and remove any you don’t want. Get pre-approved by your credit union first, and don’t sign until the numbers match what you agreed to."
+    },
+
+    /* =========================== LEGIT — BEGINNER =========================== */
+    {
+      difficulty: "Beginner", cat: "Identity theft", type: "Website", correct: "legit",
+      title: "Freezing your credit",
+      ev: { kind: "web", url: "https://www.equifax.com/personal/credit-report-services/credit-freeze/", body: [
+        "Place a free security freeze on your Equifax credit report.",
+        "Create an account to verify your identity. You can temporarily lift the freeze any time you apply for credit."
+      ]},
+      context: "You typed the address yourself after a store you shop at had a data breach. You plan to do the same at Experian and TransUnion.",
+      explanation: "A credit freeze is free by federal law and is one of the strongest protections against identity theft. Lenders can’t open new accounts in your name while it’s on. Doing it directly on each bureau’s official site is the right way.",
+      flags: ["You went to the official site yourself.", "Free by law.", "You control when to lift it."],
+      action: "Freeze your credit at all three bureaus, and keep your PINs or logins somewhere safe so you can lift the freezes when you apply for credit."
     },
     {
-      difficulty: "Intermediate",
-      type: "Employment",
-      title: "“Legit remote job with normal payroll”",
-      scenario: "You apply through a known company’s website, do interviews, and receive an offer letter. They say you’ll be paid by direct deposit after filling out standard HR forms.",
-      clues: [
-        "Formal interview process.",
-        "Official email domain and HR documents.",
-        "No requests to move money for the company."
-      ],
-      correct: "legit",
-      explanation: "This is how many real jobs work: paperwork, direct deposit, and no requests to use your personal accounts to route funds.",
-      redFlags: []
+      difficulty: "Beginner", cat: "Home & property", type: "Website", correct: "legit",
+      title: "Signing up for property alerts",
+      ev: { kind: "web", url: "https://www.cedarcounty.gov/recorder/property-fraud-alert", body: [
+        "Property Fraud Alert — a FREE service of the Cedar County Recorder.",
+        "Enter your name to receive an email whenever a document is recorded under that name."
+      ]},
+      context: "You found this page on your county’s official .gov website after reading about deed theft.",
+      explanation: "Many county recorders offer free alerts that tell you when someone records a document, like a deed or mortgage, in your name. It’s an official, no-cost way to catch house stealing early.",
+      flags: ["Official county .gov website.", "Free service.", "You found it yourself."],
+      action: "Sign up, and help older relatives who own homes do the same."
     },
     {
-      difficulty: "Advanced",
-      type: "Crypto",
-      title: "“Celebrity crypto giveaway”",
-      scenario: "A livestream on social media claims a famous person is giving away crypto — \"send 0.1 coin, get 1 coin back.\" A QR code is shown on screen.",
-      clues: [
-        "Send crypto first to get more back.",
-        "Offer seems too good to be true.",
-        "No official announcement from the real celebrity accounts."
-      ],
-      correct: "fraud",
-      explanation: "Crypto \"send me money, I’ll send more back\" offers are almost always scams.",
-      redFlags: [
-        "Requires sending crypto up front.",
-        "Uses a famous name to gain trust.",
-        "\"Guaranteed\" multiplied returns."
-      ]
+      difficulty: "Beginner", cat: "Cards & checks", type: "In person", correct: "legit",
+      title: "Tapping to pay at the pump",
+      ev: { kind: "scene", label: "At the gas station", body: [
+        "You pick the pump right in front of the store window. Its card reader matches all the others and doesn’t move when you tug on it.",
+        "The security seal on the cabinet is unbroken. You tap your card instead of inserting it."
+      ]},
+      context: "Compare this case with “The gas pump at the end of the row.”",
+      explanation: "A pump in view of the cashier, with a solid reader and an intact seal, is a low-risk choice, and tapping to pay is harder to skim than swiping.",
+      flags: ["Reader matches the other pumps and isn’t loose.", "Security seal intact.", "Pump is in view of staff.", "Tap-to-pay used."],
+      action: "Using a credit card instead of debit at the pump adds another layer of protection."
     },
     {
-      difficulty: "Advanced",
-      type: "Banking App",
-      title: "“Friend asks you to receive money for them”",
-      scenario: "An old acquaintance asks if they can deposit checks into your account and have you send them the cash, promising you a small cut.",
-      clues: [
-        "They want to use your account as a pass-through.",
-        "They can’t explain why they can’t use their own account.",
-        "Offer feels secretive or rushed."
-      ],
-      correct: "fraud",
-      explanation: "This is often money laundering or check fraud. Using your account can get you in serious trouble.",
-      redFlags: [
-        "You become the middle-person for money.",
-        "No clear, legitimate reason.",
-        "Offer of \"easy\" money for doing almost nothing."
-      ]
+      difficulty: "Beginner", cat: "Benefits", type: "Website", correct: "legit",
+      title: "Locking your EBT card in the state app",
+      ev: { kind: "web", url: "State EBT app (downloaded from the link on your state’s .gov benefits website)", body: [
+        "Card ending in 2290 — Balance: $284.16",
+        "[ Lock card ] [ Change PIN ] Tip: Lock your card when you’re not shopping. We will never call or text to ask for your PIN."
+      ]},
+      context: "A caseworker told you about the app, and you downloaded it from the link on your state’s official benefits website.",
+      explanation: "Many states offer official apps that let you check your balance and lock your card between uses, which helps stop skimming theft. You got the app from an official source, and it doesn’t ask for anything unusual.",
+      flags: ["Downloaded through the official .gov website.", "Lets YOU control your card.", "Warns that the state never asks for your PIN."],
+      action: "Lock your card between shopping trips and change your PIN regularly."
     },
     {
-      difficulty: "Intermediate",
-      type: "Online Store",
-      title: "“Shopping on a cloned website”",
-      scenario: "You click an ad for your favorite shoe brand, but the site URL is slightly off and prices are unbelievably cheap. They only accept Zelle®, Cash App, or crypto — no cards.",
-      clues: [
-        "URL is different from the brand’s real domain.",
-        "Prices are far below normal.",
-        "No credit/debit card or buyer protection."
-      ],
-      correct: "fraud",
-      explanation: "Fake shopping sites charge you but never ship items, and they use payment methods that are hard to reverse.",
-      redFlags: [
-        "Look-alike website address.",
-        "Suspiciously low prices.",
-        "No standard payment options."
-      ]
+      difficulty: "Beginner", cat: "Taxes", type: "In person", correct: "legit",
+      title: "Free tax help at the library",
+      ev: { kind: "scene", label: "At the public library", body: [
+        "A sign says “Free Tax Help — IRS VITA Program.” A volunteer with an IRS certification badge prepares your return and walks you through it.",
+        "You review the return, and your refund is set to go straight into your own bank account."
+      ]},
+      context: "Compare this case with “The tax shop that promises the biggest refund.”",
+      explanation: "VITA (Volunteer Income Tax Assistance) is a real IRS program offering free tax prep to people who qualify. Volunteers are trained and certified, and your refund goes straight to you.",
+      flags: ["An IRS-sponsored program.", "No fee and no cut of your refund.", "Refund goes to your own account.", "You review the return before it’s filed."],
+      action: "Find a site near you through the IRS website. Bring your ID, Social Security cards, and tax forms."
     },
     {
-      difficulty: "Beginner",
-      type: "Bank Branch",
-      title: "“Meeting with a banker by appointment”",
-      scenario: "You schedule an appointment at your bank branch to ask questions about opening a savings account. You sit with a banker at their desk inside the branch.",
-      clues: [
-        "You initiated the visit.",
-        "Official bank location and staff.",
-        "No pressure to move money in strange ways."
-      ],
-      correct: "legit",
-      explanation: "Talking with staff inside your bank branch is a normal way to handle money questions.",
-      redFlags: []
+      difficulty: "Beginner", cat: "Loans", type: "In person", correct: "legit",
+      title: "A small loan from your credit union",
+      ev: { kind: "scene", label: "At your credit union", body: [
+        "You need $800 for a car repair. Your credit union offers a “Payday Alternative Loan” with a 28% interest cap, six months to repay, and a $20 application fee.",
+        "A loan officer explains the total cost in writing before you sign."
+      ]},
+      explanation: "Federal credit unions offer Payday Alternative Loans with capped rates and fees. They cost far less than a payday loan, the costs are explained in writing, and nothing is paid with gift cards or before you’re approved.",
+      flags: ["A regulated lender you already bank with.", "Capped interest rate and a small, clearly disclosed fee.", "Written disclosure of the total cost."],
+      action: "Compare the total cost, and only borrow what you can repay on schedule."
+    },
+    {
+      difficulty: "Beginner", cat: "Home & contractors", type: "In person", correct: "legit",
+      title: "Hiring a roofer the careful way",
+      ev: { kind: "scene", label: "At your kitchen table", body: [
+        "After the hailstorm, you get three written bids from local roofers. You look up the one you like on your state’s contractor license website, and the license is active.",
+        "The contract lists a small deposit, payments tied to finished work, and a city permit the roofer will pull."
+      ]},
+      context: "Compare this case with “A roofer knocks after the storm.”",
+      explanation: "Comparing written bids, confirming the license yourself, and paying as work gets done is how you protect yourself with any contractor.",
+      flags: ["Several written bids.", "License confirmed on the state’s website.", "Small deposit, payments tied to progress.", "Permit pulled for the job."],
+      action: "Keep copies of everything, and don’t make the final payment until the work passes inspection."
+    },
+    {
+      difficulty: "Beginner", cat: "Cars", type: "In person", correct: "legit",
+      title: "Selling your car at the bank",
+      ev: { kind: "scene", label: "Inside the buyer’s bank", body: [
+        "You meet the buyer of your sedan at their bank on a Tuesday afternoon. You watch the teller print a cashier’s check for $11,000, made out to you.",
+        "Then you sign the title and hand over the keys."
+      ]},
+      context: "Compare this case with “A buyer for your car shows up Friday night.”",
+      explanation: "Watching the bank create the cashier’s check yourself removes the risk of a fake one. It’s one of the safest ways to handle a private car sale.",
+      flags: ["You watched the bank issue the check.", "During business hours.", "Title signed only after payment."],
+      action: "Also fill out your state’s notice-of-sale form so you aren’t responsible for tickets or tolls after the sale."
+    },
+
+    /* ========================= LEGIT — INTERMEDIATE ========================= */
+    {
+      difficulty: "Intermediate", cat: "Credit & debt", type: "Phone call", correct: "legit",
+      title: "A nonprofit credit counselor",
+      ev: { kind: "call", caller: "You called: Greenway Financial Counseling (an NFCC member agency)", lines: [
+        ["Counselor", "Your first session is free. Let’s go over your income, bills, and debts."],
+        ["Counselor", "One option is a debt management plan: you keep paying, but we ask your card companies to lower your interest rates. There’s a $35 monthly fee, and I’ll send you all the terms in writing first."]
+      ]},
+      context: "Compare this case with “A program to cut your debt by 70%.”",
+      explanation: "Reputable nonprofit credit counselors offer a free first session, keep you paying your creditors, and disclose fees up front and in writing. You contacted them, not the other way around.",
+      flags: ["You reached out to them.", "Member of a national nonprofit association.", "Free first session, small fees disclosed in writing.", "You keep paying your creditors."],
+      action: "Check the agency’s membership on the NFCC website and read the agreement before you enroll."
+    },
+    {
+      difficulty: "Intermediate", cat: "Identity theft", type: "Letter by mail", correct: "legit",
+      title: "Your insurance paid for your checkup",
+      ev: { kind: "letter", from: "BlueRiver Health Plan — Explanation of Benefits (This is not a bill)", body: [
+        "Service: Annual physical. Provider: Dr. Amara Okoye, Family Medicine. Date: April 2. Amount billed: $240. Plan paid: $240.",
+        "You owe: $0."
+      ]},
+      context: "You saw Dr. Okoye for your yearly checkup on April 2. Compare this case with “Your insurance paid for an MRI.”",
+      explanation: "An Explanation of Benefits isn’t a bill. It shows what your insurance paid. When it matches care you actually received, everything is in order.",
+      flags: ["A visit you really had, on the right date.", "Your real doctor.", "Clearly marked “not a bill.”"],
+      action: "Keep reading every EOB. They’re how you catch medical identity theft early."
+    },
+    {
+      difficulty: "Intermediate", cat: "Cars", type: "In person", correct: "legit",
+      title: "Buying from the owner on the title",
+      ev: { kind: "scene", label: "At the seller’s home", body: [
+        "The seller’s driver’s license name matches the title. She hands you the maintenance records and lets you take the car to your mechanic.",
+        "The vehicle history report matches what she told you. She suggests finishing the sale together at the DMV office."
+      ]},
+      context: "Compare this case with “Selling a car for a cousin.”",
+      explanation: "A seller who owns the car, welcomes an inspection, and offers to transfer the title at the DMV has nothing to hide.",
+      flags: ["Seller’s name matches the title.", "Independent inspection allowed.", "History report matches her story.", "Transfer done at an official office."],
+      action: "Pay with a traceable method, like a cashier’s check, and get a signed bill of sale."
+    },
+    {
+      difficulty: "Intermediate", cat: "Immigration & legal", type: "In person", correct: "legit",
+      title: "Help from an accredited representative",
+      ev: { kind: "scene", label: "At a community nonprofit", body: [
+        "A nonprofit immigrant services center tells you its staff member is a DOJ-accredited representative. You find her name on the Justice Department’s official list.",
+        "She explains your options, gives you a written agreement with a low fee, and makes copies of your documents while you keep the originals."
+      ]},
+      context: "Compare this case with “A notario promises a fast green card.”",
+      explanation: "DOJ-accredited representatives at recognized nonprofits are legally allowed to help with immigration cases. They give written agreements, don’t promise results, and don’t keep your original documents.",
+      flags: ["Name confirmed on the official Justice Department list.", "Written agreement.", "No promises about results.", "You keep your original documents."],
+      action: "Keep copies of everything filed for you, and always get receipts."
+    },
+    {
+      difficulty: "Intermediate", cat: "Identity theft", type: "Email", correct: "legit",
+      title: "A new inquiry on your credit report",
+      ev: { kind: "email", from: "Experian <alerts@experian.com>", subject: "Credit alert: new hard inquiry", body: [
+        "A new hard inquiry was added to your Experian credit report.",
+        "Lender: Riverbend Credit Union — Auto Loans. Date: yesterday. Sign in to your Experian account to view details."
+      ]},
+      context: "Yesterday you applied for a car loan at Riverbend Credit Union.",
+      explanation: "When you apply for credit, the lender checks your report and an inquiry is added. This alert matches an application you just made, and it doesn’t ask for any information.",
+      flags: ["Matches an application you made yesterday.", "Comes from the bureau’s real domain.", "No request for information or payment."],
+      action: "No action needed. If you ever get an inquiry alert for credit you didn’t apply for, freeze your credit and contact that lender."
+    },
+    {
+      difficulty: "Intermediate", cat: "Small business", type: "Website", correct: "legit",
+      title: "Renewing your federal vendor registration",
+      ev: { kind: "web", url: "https://sam.gov/entity-registration", body: [
+        "Renew your entity registration. Registration is FREE.",
+        "Sign in with Login.gov to review and update your business information."
+      ]},
+      context: "You typed sam.gov yourself after getting a reminder from SAM.gov. Compare this case with “Register for government contracts — $350.”",
+      explanation: "This is the official, free government site for renewing your registration. You went there yourself, and it signs you in through the government’s official login service.",
+      flags: ["The official .gov site, typed in yourself.", "Clearly free.", "Uses the government’s official sign-in."],
+      action: "Put your renewal date on your calendar so third-party “reminder” emails can’t rush you."
+    },
+    {
+      difficulty: "Intermediate", cat: "Home & contractors", type: "Phone call", correct: "legit",
+      title: "The insurance adjuster calls",
+      ev: { kind: "call", caller: "Caller ID: Maple Mutual Insurance", lines: [
+        ["Adjuster", "Hi, I’m calling about claim number 44-10872 for your hail damage. I’m the adjuster assigned to you."],
+        ["Adjuster", "Could I come out Thursday to inspect the roof? There’s no cost to you for the inspection."]
+      ]},
+      context: "You filed the claim yourself through your insurance company’s app two days ago, and the app shows the same claim number and adjuster name.",
+      explanation: "After you file a claim, your insurer assigns an adjuster who calls to schedule an inspection. This one knows your real claim number, matches what’s in your app, and asks for no money.",
+      flags: ["You started the claim.", "Claim number and name match your app.", "No payment or personal information requested."],
+      action: "If you ever doubt a caller, hang up and call the number in your insurance app or on your policy."
+    },
+    {
+      difficulty: "Intermediate", cat: "Cards & checks", type: "Banking app", correct: "legit",
+      title: "Depositing your paycheck by phone",
+      ev: { kind: "web", url: "Riverbend Credit Union app — Mobile Deposit", body: [
+        "Endorse your check: sign the back and write “For mobile deposit only at Riverbend CU.”",
+        "Deposit received: $1,284.50. Keep your paper check for 14 days, then destroy it."
+      ]},
+      context: "It’s your own paycheck from your employer, deposited in your own credit union’s app.",
+      explanation: "Depositing your own paycheck in your own bank’s app is normal. The restricted endorsement keeps someone from cashing the same check somewhere else.",
+      flags: ["Your own paycheck into your own account.", "Official app.", "Restrictive endorsement used."],
+      action: "Store the check safely until the deposit fully clears, then shred it."
+    },
+
+    /* =========================== LEGIT — ADVANCED =========================== */
+    {
+      difficulty: "Advanced", cat: "Identity theft", type: "Letter by mail", correct: "legit",
+      title: "Freezing your child’s credit",
+      ev: { kind: "letter", from: "TransUnion — Security Freeze Confirmation", body: [
+        "We have placed a security freeze on the credit file of your minor child, as you requested.",
+        "We created a credit file only to hold the freeze. No credit can be opened in your child’s name while it is in place."
+      ]},
+      context: "You mailed the request yourself, with copies of your child’s birth certificate and your ID, to the address on TransUnion’s official website.",
+      explanation: "Parents can place a free freeze for children under 16. The bureau creates a file only to lock it. This confirmation matches a request you sent, and it asks for nothing.",
+      flags: ["Matches a request you made.", "Sent to the address on the bureau’s official site.", "Free, and asks for nothing."],
+      action: "Do the same with Equifax and Experian, and keep the confirmations somewhere safe until your child is an adult."
+    },
+    {
+      difficulty: "Advanced", cat: "Loans", type: "Phone call", correct: "legit",
+      title: "Your loan officer needs one more document",
+      ev: { kind: "call", caller: "Caller ID: Dana Price, Riverbend Mortgage (the number in your loan documents)", lines: [
+        ["Loan officer", "Hi, it’s Dana, following up on your mortgage application. Underwriting needs your two most recent bank statements."],
+        ["Loan officer", "Please upload them in the borrower portal you’ve been using. Don’t email them, and you don’t need to send any money."]
+      ]},
+      context: "You’ve been working with Dana for three weeks, and the request also appears as a to-do item in your loan portal.",
+      explanation: "Lenders often ask for more documents during underwriting. This request comes from the person you’ve been working with, from a number you already have, and goes through the secure portal you already use, with no money involved.",
+      flags: ["A person you already work with, calling from a known number.", "The request also appears in your existing portal.", "Secure upload, not email.", "No money requested."],
+      action: "Upload through the portal. If anyone ever asks you to wire money or change payment instructions, call your loan officer back at the number in your documents first."
+    },
+    {
+      difficulty: "Advanced", cat: "Small business", type: "Email", correct: "legit",
+      title: "A notice about your trademark",
+      ev: { kind: "email", from: "TEAS <TEAS@uspto.gov>", subject: "Courtesy reminder: Section 8 declaration due", body: [
+        "This is a courtesy reminder that the declaration of use for U.S. Registration No. 6,214,870 is due within the next year.",
+        "File online through the USPTO’s Trademark Center. Official USPTO correspondence comes only from the uspto.gov domain."
+      ]},
+      context: "You checked your registration’s status on the USPTO website, and the deadline matches. Compare this case with “Renew your trademark in the global registry.”",
+      explanation: "This comes from the USPTO’s real domain, points you to the USPTO’s own filing system, and matches what you confirmed on the official site. It doesn’t ask you to pay a private company.",
+      flags: ["Official uspto.gov sender.", "Directs you to the official filing system.", "Matches the status you checked yourself.", "No private company or “registry” involved."],
+      action: "File through the USPTO directly, or have your trademark attorney do it."
+    },
+    {
+      difficulty: "Advanced", cat: "Taxes", type: "In person", correct: "legit",
+      title: "A CPA says you don’t qualify",
+      ev: { kind: "scene", label: "At your accountant’s office", body: [
+        "You ask your CPA about the pandemic-era payroll tax credit you heard about. She reviews your payroll and revenue records for an hour.",
+        "She tells you your business doesn’t qualify, explains why in writing, and charges her normal hourly rate. You confirmed her license on your state’s board of accountancy website."
+      ]},
+      context: "Compare this case with “Your business qualifies for a big tax credit.”",
+      explanation: "A licensed professional who reviews your records, explains the rules, and charges a normal fee, whatever the answer, is doing exactly what you want. Being told “no” can save you from penalties later.",
+      flags: ["License confirmed on the state’s website.", "Reviewed your actual records.", "Normal hourly fee, not a cut of the refund.", "Explained the answer in writing."],
+      action: "Keep her written explanation with your tax records."
+    },
+    {
+      difficulty: "Advanced", cat: "Cars", type: "In person", correct: "legit",
+      title: "The finance office offers coverage",
+      ev: { kind: "call", caller: "At the dealership, in the finance office", lines: [
+        ["Finance manager", "Your payment is $462, matching the buyer’s order you signed. I’m also required to offer you GAP coverage. It’s optional, and it would add $14 a month."],
+        ["You", "No thanks."],
+        ["Finance manager", "No problem. I’ll have you initial here that you declined. Your payment stays $462."]
+      ]},
+      context: "Compare this case with “The finance office says it’s required.”",
+      explanation: "Offering optional products is normal. What matters is that the price is shown separately, it’s clearly optional, and saying no doesn’t change your loan. Everything matches what you agreed to.",
+      flags: ["Payment matches the signed buyer’s order.", "Add-on clearly described as optional.", "Price shown separately.", "Declining doesn’t change the deal."],
+      action: "Read every line of the contract before signing, and keep your copy of the buyer’s order."
+    },
+    {
+      difficulty: "Advanced", cat: "Identity theft", type: "Text message", correct: "legit",
+      title: "A text about a SIM change",
+      ev: { kind: "sms", from: "611 (your carrier)", msgs: [
+        "Alert: A SIM change was completed on your account at 2:14 PM. If you did not request this, call 611 from another phone or visit a store immediately."
+      ]},
+      context: "At 2:10 PM you bought a new phone at your carrier’s store, and the employee moved your number onto it. Compare this case with “Your phone suddenly says ‘No Service’.”",
+      explanation: "Carriers send these alerts whenever your SIM changes. This one matches what you just did in the store, comes from the carrier’s short code, and asks for nothing.",
+      flags: ["Matches a SIM change you just made.", "Comes from your carrier’s short code.", "Has no link and asks for no information."],
+      action: "While you’re at it, ask your carrier to add a port-out PIN or number lock to protect against SIM swaps."
     }
   ];
 
-  /* =========================
-     Build CASES = 100 entries
-     ========================= */
-  const CASES = (function() {
-    const variants = [];
-    const variantLabels = ["A", "B", "C", "D"];
-    let nextId = 1;
+  CASES.forEach(function (c, i) { c.id = i + 1; });
 
-    BASE_CASES.forEach((base, baseIndex) => {
-      variantLabels.forEach((label, vIndex) => {
-        if (variants.length >= 100) return;
-        const copy = Object.assign({}, base);
-        copy.id = nextId++;
-        copy.title = base.title + (vIndex === 0 ? "" : " (Variant " + label + ")");
-        variants.push(copy);
+  /* ===== state ===== */
+  var gameCases = [];
+  var idx = 0;
+  var score = 0;
+  var streak = 0;
+  var bestStreak = 0;
+  var results = [];
+  var answered = false;
+  var sessionBest = null; // kept in memory only; nothing is saved on the device
+
+  /* ===== DOM ===== */
+  function $(id) { return document.getElementById(id); }
+  var screens = { home: $("screen-home"), "case": $("screen-case"), results: $("screen-results") };
+  var bars = { home: $("bb-home"), answer: $("bb-answer"), next: $("bb-next"), results: $("bb-results") };
+  var barBack = $("bar-back"), barLogo = $("bar-logo"), barTitle = $("bar-title"), barScore = $("bar-score");
+  var scoreEl = $("score"), progressFill = $("progress-fill");
+  var diffEl = $("case-diff"), typeEl = $("case-type"), titleEl = $("case-title");
+  var evidenceEl = $("evidence"), notesEl = $("case-notes"), feedbackEl = $("feedback");
+  var btnFraud = $("btn-fraud"), btnLegit = $("btn-legit"), nextBtn = $("next-btn");
+  var reviewEl = $("review"), reviewToggle = $("review-toggle");
+
+  /* ===== helpers ===== */
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function answerLabel(code) { return code === "fraud" ? "Fraud" : "Looks Legit"; }
+
+  /* Balanced draw: 5 fraud + 5 legit, each 2 beginner / 2 intermediate / 1 advanced */
+  function pickCases() {
+    var picked = [];
+    var used = {};
+    ["fraud", "legit"].forEach(function (answer) {
+      Object.keys(MIX).forEach(function (diff) {
+        var pool = shuffle(CASES.filter(function (c) {
+          return c.correct === answer && c.difficulty === diff && !used[c.id];
+        }));
+        pool.slice(0, MIX[diff]).forEach(function (c) { picked.push(c); used[c.id] = true; });
       });
     });
-
-    return variants;
-  })();
-
-  // ============ GAME STATE ============
-  let gameCases = [];
-  let currentIndex = 0;
-  let scoreCorrect = 0;
-  let scoreTotalAnswered = 0;
-  let gameActive = false;
-  let gameResults = [];
-
-  // DOM
-  const introPanel = document.getElementById("wgra-fraud-intro-panel");
-  const casePanel = document.getElementById("wgra-fraud-case-panel");
-  const startBtn = document.getElementById("wgra-fraud-start-btn");
-  const btnFraud = document.getElementById("wgra-fraud-btn-fraud");
-  const btnLegit = document.getElementById("wgra-fraud-btn-legit");
-  const nextBtn = document.getElementById("wgra-fraud-next-btn");
-  const difficultyPill = document.getElementById("wgra-fraud-difficulty-pill");
-  const typePill = document.getElementById("wgra-fraud-type-pill");
-  const caseCountLabel = document.getElementById("wgra-fraud-case-count");
-  const caseTitleEl = document.getElementById("wgra-fraud-case-title");
-  const caseTextEl = document.getElementById("wgra-fraud-case-text");
-  const caseCluesEl = document.getElementById("wgra-fraud-case-clues");
-  const progressBar = document.getElementById("wgra-fraud-progress-bar");
-  const progressLabel = document.getElementById("wgra-fraud-progress-label");
-
-  const scoreMain = document.getElementById("wgra-fraud-score-main");
-  const scoreSub = document.getElementById("wgra-fraud-score-sub");
-  const feedbackBlock = document.getElementById("wgra-fraud-feedback-block");
-  const feedbackTag = document.getElementById("wgra-fraud-feedback-tag");
-  const feedbackTitle = document.getElementById("wgra-fraud-feedback-title");
-  const feedbackBody = document.getElementById("wgra-fraud-feedback-body");
-  const feedbackRedFlags = document.getElementById("wgra-fraud-feedback-redflags");
-  const summaryBlock = document.getElementById("wgra-fraud-summary");
-  const summaryText = document.getElementById("wgra-fraud-summary-text");
-  const resultsList = document.getElementById("wgra-fraud-results-list");
-  const restartBtn = document.getElementById("wgra-fraud-restart-btn");
-
-  function shuffleArray(arr) {
-    const copy = arr.slice();
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
+    if (picked.length < TOTAL_CASES_PER_GAME) {
+      shuffle(CASES.filter(function (c) { return !used[c.id]; }))
+        .slice(0, TOTAL_CASES_PER_GAME - picked.length)
+        .forEach(function (c) { picked.push(c); });
     }
-    return copy;
+    return shuffle(picked);
   }
 
-  function difficultyLabel(diff) {
-    if (!diff) return "Case";
-    return diff + " Case";
+  /* ===== evidence ===== */
+  function evHead(icon, kind, who) {
+    var head = el("div", "ev-head");
+    head.appendChild(el("span", "ev-avatar", icon));
+    var t = el("span", "ev-head-text");
+    t.appendChild(el("span", "ev-kind", kind));
+    t.appendChild(el("span", "ev-who", who));
+    head.appendChild(t);
+    return head;
   }
 
-  function answerLabel(code) {
-    return code === "fraud" ? "Fraud" : "Looks Legit";
+  function paragraphs(body, list) {
+    (list || []).forEach(function (p) { body.appendChild(el("p", null, p)); });
   }
 
+  function renderEvidence(ev) {
+    var box = el("div", "ev");
+    var body = el("div", "ev-body");
+
+    if (ev.kind === "sms" || ev.kind === "dm") {
+      box.className += " ev-thread";
+      box.appendChild(evHead(ev.kind === "sms" ? "💬" : "👥",
+        ev.kind === "sms" ? "Text message" : (ev.platform || "Direct message"), ev.from));
+      ev.msgs.forEach(function (m) { body.appendChild(el("div", "bubble", m)); });
+    } else if (ev.kind === "email") {
+      box.className += " ev-email";
+      box.appendChild(evHead("✉️", "Email from", ev.from));
+      box.appendChild(el("div", "ev-subject", ev.subject));
+      paragraphs(body, ev.body);
+      if (ev.link) {
+        var p = el("p");
+        p.appendChild(el("span", "ev-link-btn", ev.link.text));
+        var note = el("span", "ev-link-note", "Long-press the button and it shows: ");
+        note.appendChild(el("code", null, ev.link.url));
+        p.appendChild(note);
+        body.appendChild(p);
+      }
+    } else if (ev.kind === "call") {
+      box.className += " ev-call";
+      box.appendChild(evHead("📞", "Incoming call", ev.caller));
+      ev.lines.forEach(function (line) {
+        var row = el("div", "call-line");
+        row.appendChild(el("span", "speaker" + (line[0] === "You" ? " you" : ""), line[0]));
+        row.appendChild(el("span", null, line[1]));
+        body.appendChild(row);
+      });
+    } else if (ev.kind === "web") {
+      var bar = el("div", "browser-bar");
+      bar.appendChild(el("span", null, "🌐"));
+      // Some cases describe where you are instead of giving a web address
+      bar.appendChild(el("span", /\s/.test(ev.url) ? "url desc" : "url", ev.url));
+      box.appendChild(bar);
+      paragraphs(body, ev.body);
+    } else if (ev.kind === "letter") {
+      box.className += " ev-letter";
+      box.appendChild(evHead("📬", "Mailed letter", ev.from));
+      paragraphs(body, ev.body);
+    } else {
+      box.className += " ev-scene";
+      box.appendChild(evHead("📍", "Situation", ev.label || "In person"));
+      paragraphs(body, ev.body);
+    }
+
+    box.appendChild(body);
+    return box;
+  }
+
+  /* ===== navigation ===== */
+  function show(screen, bar) {
+    for (var k in screens) screens[k].classList.toggle("active", k === screen);
+    for (var b in bars) bars[b].classList.toggle("active", b === bar);
+    var home = screen === "home";
+    barBack.classList.toggle("hidden", home);
+    barLogo.classList.toggle("hidden", !home);
+    barScore.classList.toggle("hidden", screen !== "case");
+    if (home) { barTitle.textContent = "Fraud Detective"; setProgress(0); }
+    if (screen === "results") { barTitle.textContent = "Results"; setProgress(gameCases.length); }
+    window.scrollTo(0, 0);
+  }
+
+  function setBar(bar) {
+    for (var b in bars) bars[b].classList.toggle("active", b === bar);
+  }
+
+  function setProgress(done) {
+    var total = gameCases.length || TOTAL_CASES_PER_GAME;
+    progressFill.style.width = Math.round(done / total * 100) + "%";
+    progressFill.setAttribute("aria-valuenow", String(done));
+  }
+
+  /* ===== game flow ===== */
   function startGame() {
-    gameCases = shuffleArray(CASES).slice(0, TOTAL_CASES_PER_GAME);
-    currentIndex = 0;
-    scoreCorrect = 0;
-    scoreTotalAnswered = 0;
-    gameActive = true;
-    gameResults = [];
-
-    introPanel.classList.add("wgra-fraud-hidden");
-    casePanel.classList.remove("wgra-fraud-hidden");
-    feedbackBlock.classList.add("wgra-fraud-hidden");
-    summaryBlock.classList.add("wgra-fraud-hidden");
-
-    btnFraud.disabled = false;
-    btnLegit.disabled = false;
-    nextBtn.disabled = true;
-    nextBtn.textContent = "Next Case";
-
-    progressBar.style.width = "0%";
-    progressLabel.textContent = "0 of " + gameCases.length + " cases completed";
-
+    gameCases = pickCases();
+    idx = 0;
+    score = 0;
+    streak = 0;
+    bestStreak = 0;
+    results = [];
+    scoreEl.textContent = "0";
+    progressFill.setAttribute("aria-valuemax", String(gameCases.length));
     renderCase();
-    updateScoreDisplay();
   }
 
   function renderCase() {
-    const current = gameCases[currentIndex];
-    if (!current) {
-      endGame();
-      return;
+    var c = gameCases[idx];
+    answered = false;
+    show("case", "answer");
+    barTitle.textContent = "Case " + (idx + 1) + "/" + gameCases.length;
+    setProgress(idx);
+    diffEl.textContent = c.difficulty;
+    typeEl.textContent = c.type;
+    titleEl.textContent = c.title;
+    evidenceEl.innerHTML = "";
+    evidenceEl.appendChild(renderEvidence(c.ev));
+    notesEl.innerHTML = "";
+    if (c.context) {
+      notesEl.appendChild(el("b", null, "Case notes: "));
+      notesEl.appendChild(document.createTextNode(c.context));
+      notesEl.classList.remove("hidden");
+    } else {
+      notesEl.classList.add("hidden");
     }
-
-    difficultyPill.textContent = difficultyLabel(current.difficulty);
-    typePill.textContent = current.type + " Case";
-    caseCountLabel.textContent = "Case " + (currentIndex + 1) + " of " + gameCases.length;
-    caseTitleEl.textContent = current.title;
-    caseTextEl.textContent = current.scenario;
-
-    caseCluesEl.innerHTML = "";
-    current.clues.forEach(clue => {
-      const li = document.createElement("li");
-      li.textContent = clue;
-      caseCluesEl.appendChild(li);
-    });
-
-    feedbackBlock.classList.add("wgra-fraud-hidden");
+    feedbackEl.className = "feedback";
+    feedbackEl.innerHTML = "";
+    btnFraud.disabled = false;
+    btnLegit.disabled = false;
+    titleEl.focus({ preventScroll: true });
   }
 
-  function updateProgress() {
-    if (!gameCases.length) return;
-    const pct = Math.round((scoreTotalAnswered / gameCases.length) * 100);
-    progressBar.style.width = pct + "%";
-    progressLabel.textContent = scoreTotalAnswered + " of " + gameCases.length + " cases completed";
-  }
-
-  function handleAnswer(userAnswer) {
-    if (!gameCases.length) return;
-    if (btnFraud.disabled && btnLegit.disabled) return;
-
-    const current = gameCases[currentIndex];
-    const isCorrect = (userAnswer === current.correct);
-
-    scoreTotalAnswered += 1;
-    if (isCorrect) scoreCorrect += 1;
-
-    gameResults.push({
-      index: currentIndex + 1,
-      title: current.title,
-      difficulty: current.difficulty,
-      type: current.type,
-      correctAnswer: current.correct,
-      userAnswer: userAnswer,
-      isCorrect: isCorrect
-    });
-
-    showFeedback(isCorrect, current, userAnswer);
-    updateScoreDisplay();
-    updateProgress();
-
+  function handleAnswer(answer) {
+    var c = gameCases[idx];
+    if (!c || answered) return;
+    answered = true;
     btnFraud.disabled = true;
     btnLegit.disabled = true;
 
-    const isLastCase = (currentIndex === gameCases.length - 1);
-    if (isLastCase) {
-      gameActive = false;
-      nextBtn.textContent = "View Results";
+    var ok = answer === c.correct;
+    if (ok) {
+      score++;
+      streak++;
+      if (streak > bestStreak) bestStreak = streak;
     } else {
-      nextBtn.textContent = "Next Case";
+      streak = 0;
     }
-    nextBtn.disabled = false;
+    scoreEl.textContent = score;
+    results.push({ c: c, answer: answer, ok: ok });
+    setProgress(idx + 1);
+
+    var verdict = c.correct === "fraud" ? "This is fraud." : "This one is legit.";
+    feedbackEl.innerHTML = "";
+    var title = el("div", "fb-title");
+    title.appendChild(el("span", "fb-badge", ok ? "✓" : "✕"));
+    title.appendChild(document.createTextNode(ok ? "Good call!" : "Not quite."));
+    if (ok && streak >= 2) title.appendChild(el("span", "pill diff", "🔥 " + streak + " in a row"));
+    feedbackEl.appendChild(title);
+    var v = el("p", "fb-verdict");
+    v.appendChild(el("strong", null, verdict));
+    v.appendChild(document.createTextNode(" " + c.explanation));
+    feedbackEl.appendChild(v);
+
+    var flags = el("div", "info-block");
+    flags.appendChild(el("b", null, c.correct === "fraud" ? "Red flags" : "Why it checks out"));
+    var ul = el("ul");
+    (c.flags || []).forEach(function (f) { ul.appendChild(el("li", null, f)); });
+    flags.appendChild(ul);
+    feedbackEl.appendChild(flags);
+
+    var act = el("div", "info-block");
+    act.appendChild(el("b", null, "What to do in real life"));
+    act.appendChild(document.createTextNode(c.action));
+    feedbackEl.appendChild(act);
+
+    feedbackEl.className = "feedback show " + (ok ? "good" : "bad");
+    nextBtn.textContent = idx === gameCases.length - 1 ? "View Results" : "Next Case";
+    setBar("next");
+    setTimeout(function () { feedbackEl.scrollIntoView({ behavior: "smooth", block: "start" }); }, 120);
   }
 
-  function showFeedback(isCorrect, current, userAnswer) {
-    feedbackBlock.classList.remove("wgra-fraud-hidden");
-
-    if (isCorrect) {
-      feedbackTag.textContent = "Correct";
-      feedbackTag.classList.remove("wrong");
-      feedbackTag.classList.add("correct");
-      feedbackTitle.textContent = "You spotted the right pattern.";
-      feedbackBody.textContent = current.explanation;
-    } else {
-      feedbackTag.textContent = "Not Quite";
-      feedbackTag.classList.remove("correct");
-      feedbackTag.classList.add("wrong");
-      const correctText = current.correct === "fraud"
-        ? "This situation is fraudulent."
-        : "This situation is likely legitimate.";
-      feedbackTitle.textContent = correctText;
-      feedbackBody.textContent = current.explanation;
-    }
-
-    feedbackRedFlags.innerHTML = "";
-    if (current.redFlags && current.redFlags.length > 0) {
-      current.redFlags.forEach(flag => {
-        const li = document.createElement("li");
-        li.textContent = flag;
-        feedbackRedFlags.appendChild(li);
-      });
-    } else {
-      const li = document.createElement("li");
-      li.textContent = "No obvious red flags here. Still, monitor your accounts and trust-but-verify.";
-      feedbackRedFlags.appendChild(li);
-    }
+  function rankFor(s) {
+    if (s === 10) return "Chief Detective";
+    if (s >= 8) return "Senior Detective";
+    if (s >= 6) return "Investigator";
+    return "Rookie Detective";
   }
 
-  function updateScoreDisplay() {
-    scoreMain.textContent = scoreCorrect + " / " + scoreTotalAnswered + " correct";
-
-    if (scoreTotalAnswered === 0) {
-      scoreSub.textContent = "Start the game to begin tracking your detective score.";
+  function buildRecap() {
+    var recap = $("recap");
+    recap.innerHTML = "";
+    var misses = results.filter(function (r) { return !r.ok; });
+    if (!misses.length) {
+      recap.className = "card recap clean";
+      recap.appendChild(el("strong", null, "No weak spots this round."));
+      recap.appendChild(el("div", null, "Play again for a new mix of cases."));
       return;
     }
-
-    const pct = Math.round((scoreCorrect / scoreTotalAnswered) * 100);
-    let label = "";
-
-    if (pct === 100) {
-      label = "Perfect work. Your fraud radar is sharp.";
-    } else if (pct >= 80) {
-      label = "Strong instincts. Keep polishing your red-flag checklist.";
-    } else if (pct >= 50) {
-      label = "Solid start. Some scams are designed to fool smart people — review the clues.";
-    } else {
-      label = "Remember: scammers are professionals. The more you practice, the safer you get.";
+    recap.className = "card recap";
+    var falseAlarms = misses.filter(function (r) { return r.c.correct === "legit"; }).length;
+    var slipped = misses.length - falseAlarms;
+    var ul = el("ul");
+    if (slipped) {
+      ul.appendChild(el("li", null, slipped + (slipped === 1 ? " scam" : " scams") +
+        " got past you. Watch for urgency, unusual payment methods, and look-alike links."));
     }
-
-    scoreSub.textContent = pct + "% correct — " + label;
+    if (falseAlarms) {
+      ul.appendChild(el("li", null, falseAlarms + (falseAlarms === 1 ? " legit situation was" : " legit situations were") +
+        " flagged as fraud. Real messages match something you did, use official channels, and never rush you."));
+    }
+    var byCat = {};
+    misses.forEach(function (r) { byCat[r.c.cat] = (byCat[r.c.cat] || 0) + 1; });
+    Object.keys(byCat).forEach(function (cat) {
+      ul.appendChild(el("li", null, "Review: " + cat + " (" + byCat[cat] + " missed)"));
+    });
+    recap.appendChild(ul);
   }
 
-  function buildResultsList() {
-    resultsList.innerHTML = "";
-    if (!gameResults.length) return;
+  function buildReview() {
+    reviewEl.innerHTML = "";
+    results.forEach(function (r, i) {
+      var d = el("details", "review-item");
+      if (!r.ok) d.open = true;
+      var s = el("summary");
+      s.appendChild(el("span", "mark " + (r.ok ? "ok" : "no"), r.ok ? "✓" : "✕"));
+      var sum = el("span", "review-sum");
+      sum.appendChild(el("b", null, (i + 1) + ". " + r.c.title));
+      sum.appendChild(el("span", null, r.c.difficulty + " · " + r.c.type));
+      s.appendChild(sum);
+      s.insertAdjacentHTML("beforeend", '<svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>');
+      d.appendChild(s);
 
-    gameResults.forEach(result => {
-      const item = document.createElement("div");
-      item.className = "wgra-fraud-result-item";
-
-      const header = document.createElement("div");
-      header.className = "wgra-fraud-result-header";
-
-      const pill = document.createElement("div");
-      pill.className = "wgra-fraud-result-pill " + (result.isCorrect ? "correct" : "wrong");
-
-      const titleText = document.createElement("div");
-      titleText.textContent = "Case " + result.index + ": " + result.title;
-
-      header.appendChild(pill);
-      header.appendChild(titleText);
-
-      const meta = document.createElement("div");
-      meta.className = "wgra-fraud-result-meta";
-      const yourAns = document.createElement("span");
-      yourAns.textContent = "Your answer: " + answerLabel(result.userAnswer);
-      const correctAns = document.createElement("span");
-      correctAns.textContent = "Correct: " + answerLabel(result.correctAnswer);
-      const level = document.createElement("span");
-      level.textContent = (result.difficulty || "Case") + " • " + result.type;
-
-      meta.appendChild(yourAns);
-      meta.appendChild(correctAns);
-      meta.appendChild(level);
-
-      item.appendChild(header);
-      item.appendChild(meta);
-      resultsList.appendChild(item);
+      var body = el("div", "review-body");
+      var l1 = el("div", "review-line");
+      l1.appendChild(el("span", "lbl", "Answer: "));
+      l1.appendChild(el("span", "tag " + r.c.correct, answerLabel(r.c.correct)));
+      body.appendChild(l1);
+      var l2 = el("div", "review-line");
+      l2.appendChild(el("span", "lbl", "You said: "));
+      l2.appendChild(document.createTextNode(answerLabel(r.answer)));
+      body.appendChild(l2);
+      var exp = el("div", "info-block");
+      exp.appendChild(el("b", null, r.c.correct === "fraud" ? "Red flags" : "Why it checks out"));
+      var ul = el("ul");
+      (r.c.flags || []).forEach(function (f) { ul.appendChild(el("li", null, f)); });
+      exp.appendChild(ul);
+      body.appendChild(exp);
+      var act = el("div", "info-block");
+      act.appendChild(el("b", null, "What to do in real life"));
+      act.appendChild(document.createTextNode(r.c.action));
+      body.appendChild(act);
+      d.appendChild(body);
+      reviewEl.appendChild(d);
     });
+    reviewToggle.textContent = "Expand all";
   }
 
   function endGame() {
-    buildResultsList();
-    summaryBlock.classList.remove("wgra-fraud-hidden");
+    var total = gameCases.length;
+    var pct = Math.round(score / total * 100);
+    var prevBest = sessionBest;
+    var isNewBest = prevBest == null || score > prevBest;
+    if (isNewBest) sessionBest = score;
+    $("best").textContent = "Your best score this session: " + sessionBest + " / " + total;
 
-    const total = gameCases.length;
-    const pct = total > 0 ? Math.round((scoreCorrect / total) * 100) : 0;
-    let summary = "";
+    $("final-score").textContent = score;
+    $("final-total").textContent = total;
+    $("final-pct").textContent = pct;
+    $("ring").style.setProperty("--pct", pct);
+    $("rank").textContent = rankFor(score);
 
-    if (pct === 100) {
-      summary = "You solved every case. Your Financial Fraud Detective™ skills are elite. Share these red flags with friends and family.";
-    } else if (pct >= 80) {
-      summary = "Excellent work. A few more reps and you’ll be nearly impossible to scam.";
-    } else if (pct >= 50) {
-      summary = "You caught many fraud patterns, but some slipped through. Reviewing the red flags will make you stronger.";
-    } else {
-      summary = "Scams are engineered to be confusing and emotional. Use what you learned here as a starting point to stay safer next time.";
-    }
+    var summary;
+    if (score === 10) summary = "You solved every case. Your Financial Fraud Detective skills are elite. Share these red flags with friends and family.";
+    else if (score >= 8) summary = "Excellent work. A few more rounds and you’ll be nearly impossible to scam.";
+    else if (score >= 5) summary = "You caught many of the patterns, but some slipped through. Review your weak spots below.";
+    else summary = "Scams are designed to be confusing and emotional. Use what you learned here and play again to sharpen your instincts.";
+    $("summary").textContent = summary +
+      (bestStreak >= 3 ? " Longest streak: " + bestStreak + "." : "") +
+      (isNewBest && prevBest != null ? " New personal best!" : "");
 
-    summaryText.textContent = summary;
-    nextBtn.disabled = true;
+    buildRecap();
+    buildReview();
+    show("results", "results");
   }
 
   function goToNext() {
-    if (!gameCases.length) return;
-
-    const isLastIndex = (currentIndex === gameCases.length - 1);
-
-    if (isLastIndex && scoreTotalAnswered === gameCases.length) {
-      endGame();
-      return;
-    }
-
-    if (currentIndex < gameCases.length - 1) {
-      currentIndex += 1;
-      renderCase();
-      btnFraud.disabled = false;
-      btnLegit.disabled = false;
-      nextBtn.disabled = true;
-      nextBtn.textContent = "Next Case";
-    }
+    if (!answered) return;
+    if (idx >= gameCases.length - 1) { endGame(); return; }
+    idx++;
+    renderCase();
   }
 
-  function restartGame() {
-    gameActive = false;
-    introPanel.classList.remove("wgra-fraud-hidden");
-    casePanel.classList.add("wgra-fraud-hidden");
-    feedbackBlock.classList.add("wgra-fraud-hidden");
-    summaryBlock.classList.add("wgra-fraud-hidden");
+  /* ===== home topics ===== */
+  (function () {
+    var seen = {};
+    var topics = $("topics");
+    CASES.forEach(function (c) {
+      if (seen[c.cat]) return;
+      seen[c.cat] = true;
+      topics.appendChild(el("span", "topic", c.cat));
+    });
+  })();
 
-    scoreCorrect = 0;
-    scoreTotalAnswered = 0;
-    gameResults = [];
-    updateScoreDisplay();
-
-    progressBar.style.width = "0%";
-    progressLabel.textContent = "0 of " + TOTAL_CASES_PER_GAME + " cases completed";
-
-    btnFraud.disabled = false;
-    btnLegit.disabled = false;
-    nextBtn.disabled = true;
-    nextBtn.textContent = "Next Case";
-  }
-
-  startBtn.addEventListener("click", startGame);
-  btnFraud.addEventListener("click", function() { handleAnswer("fraud"); });
-  btnLegit.addEventListener("click", function() { handleAnswer("legit"); });
+  /* ===== events ===== */
+  $("start-btn").addEventListener("click", startGame);
+  $("restart-btn").addEventListener("click", startGame);
+  $("home-btn").addEventListener("click", function () { show("home", "home"); });
+  barBack.addEventListener("click", function () { show("home", "home"); });
+  btnFraud.addEventListener("click", function () { handleAnswer("fraud"); });
+  btnLegit.addEventListener("click", function () { handleAnswer("legit"); });
   nextBtn.addEventListener("click", goToNext);
-  restartBtn.addEventListener("click", restartGame);
+
+  reviewToggle.addEventListener("click", function () {
+    var items = reviewEl.querySelectorAll("details");
+    var expand = reviewToggle.textContent === "Expand all";
+    for (var i = 0; i < items.length; i++) items[i].open = expand;
+    reviewToggle.textContent = expand ? "Collapse all" : "Expand all";
+  });
+
+  /* ===== sheets ===== */
+  var scrim = $("scrim");
+  function closeSheets() {
+    var all = document.querySelectorAll(".sheet");
+    for (var i = 0; i < all.length; i++) all[i].classList.remove("open");
+    scrim.classList.remove("open");
+  }
+  function openSheet(id) {
+    closeSheets();
+    var s = $(id);
+    if (!s) return;
+    s.classList.add("open");
+    scrim.classList.add("open");
+  }
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target.closest("[data-sheet],[data-close]") : null;
+    if (t && t.hasAttribute("data-sheet")) { openSheet(t.getAttribute("data-sheet")); return; }
+    if (t && t.hasAttribute("data-close")) { closeSheets(); return; }
+    if (e.target === scrim) closeSheets();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeSheets();
+  });
 })();
 </script>
-</body></html>
+</body>
+</html>

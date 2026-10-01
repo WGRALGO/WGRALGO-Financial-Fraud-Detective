@@ -1,5 +1,7 @@
 # WGRALGO Financial Fraud Detective
 
+**Version: 1.1.0**
+
 Financial Fraud Detective is a free educational Android app from **The Wealth Gap Resolution Algorithm™ Inc.** It helps users practice spotting scams, phishing attempts, suspicious money requests, fake support messages, and other financial fraud red flags through interactive case-based gameplay.
 
 Play the role of a detective. Read each real-world style money situation, study the clues, and decide if it's **Fraud** or **Looks Legit**. Each case reveals red flags that protect your wallet, your credit, and your peace of mind.
@@ -8,18 +10,21 @@ This is an educational fraud-awareness game for people who want to stay three st
 
 ## Features
 
-- 10-case sessions drawn at random from a 100+ case pool
-- Difficulty levels: **Beginner**, **Intermediate**, **Advanced**
-- Case categories: Text / Message / Phone Call / Email / Investment Offer / Payment App / Job Offer / Bank Alert
-- Two-button gameplay: **Fraud** or **Looks Legit**
-- Instant feedback with red-flag explanations and protective tips
-- Live scoreboard, progress tracking, and Play Again
-- Final detective rating:
-  - 90%–100% — Master Fraud Detective
-  - 75%–89% — Sharp Investigator
-  - 60%–74% — Red Flag Rookie
-  - Below 60% — Needs More Case Work
-- Premium WGRALGO black-and-gold UI, tablet and phone responsive
+- 45 realistic cases on money traps that go beyond everyday scam texts:
+  identity theft, cars, contractors, loans, credit and debt, taxes, benefits,
+  immigration and legal help, cards and checks, home and property, and small business
+- Evidence shown the way you'd really see it: text threads, emails (with the
+  real link behind the button), phone-call transcripts, web pages, mailed
+  letters, and in-person situations
+- Balanced 10-case rounds: 4 beginner, 4 intermediate, 2 advanced, and
+  5 fraud + 5 legit, so guessing "fraud" every time won't work
+- Two-button gameplay: **This is Fraud** or **Looks Legit**
+- After each answer: the red flags (or why it checks out) and **what to do in real life**
+- Live score, streaks, and progress bar
+- Results with a detective rank (Rookie Detective → Chief Detective), your weak
+  spots by category, and an expandable case file of every answer
+- Native-style app design: app bar, bottom action buttons, slide-up About,
+  Privacy, and Credits sheets
 - Offline-first, no permissions required, no account, no cloud
 
 ## Privacy & Offline
@@ -32,22 +37,33 @@ WGRALGO Financial Fraud Detective is offline-first.
 - No trackers.
 - No subscription.
 - No cloud sync and no backend server.
-- All gameplay stays on your device.
+- All gameplay stays on your device. Your best score is kept only while the app is open.
 - The APK does **not** request the Android `INTERNET` permission.
 
 See [PRIVACY.md](PRIVACY.md) for the full privacy statement.
 
 ## Installation (Sideloading)
 
-1. Download `WGRALGO_Financial_Fraud_Detective_v1.0.0.apk` from the [v1.0.0 release](../../releases/tag/v1.0.0).
-2. (Optional) Verify the download:
+1. Download `WGRALGO_Financial_Fraud_Detective_v1.1.0.apk` from the
+   [v1.1.0 release](../../releases/tag/v1.1.0).
+2. (Optional) Verify the download with the `.sha256` file attached to the release:
    ```
-   sha256sum -c WGRALGO_Financial_Fraud_Detective_v1.0.0.apk.sha256
+   sha256sum -c WGRALGO_Financial_Fraud_Detective_v1.1.0.apk.sha256
    ```
 3. On your Android device, allow installation from unknown sources for your browser or file manager.
 4. Open the APK and install.
 
-> **If you installed an earlier test/debug build:** you may need to **uninstall the old APK first** before installing v1.0.0. The official public APK uses a new proper release signature, and Android will refuse to install over a build signed with a different key.
+> **Have v1.0.0 installed? Uninstall it first.** v1.1.0 is signed with a new
+> release key, so Android will refuse to install it over v1.0.0. The app
+> stores no accounts or personal data, so uninstalling loses nothing. Later
+> updates will install over v1.1.0 normally.
+
+Release signing certificate from v1.1.0 onward
+(`CN=WGRALGO, OU=Financial Fraud Detective`), SHA-256 fingerprint:
+
+`0E:F1:3A:04:FC:3D:36:B6:D7:BA:7D:32:53:C1:FD:59:EC:56:D7:E1:AC:0B:5E:C2:C2:30:03:50:24:6F:7B:9A`
+
+Check it with `apksigner verify --print-certs WGRALGO_Financial_Fraud_Detective_v1.1.0.apk`.
 
 ## Build from Source
 
@@ -65,26 +81,44 @@ cd android
 ./gradlew assembleRelease
 ```
 
-A release keystore is required for a signed APK. Create one and reference it via `android/keystore.properties`:
+A release keystore is required for a signed APK. Reference it with
+`android/keystore.properties` (git-ignored):
 
 ```
-storeFile=/absolute/path/to/your-release.jks
+storeFile=/absolute/path/to/your-release.keystore
 storePassword=YOUR_PASSWORD
 keyAlias=YOUR_ALIAS
 keyPassword=YOUR_PASSWORD
 ```
 
+or with the environment variables `FFD_KEYSTORE_FILE`, `FFD_KEYSTORE_PASSWORD`,
+`FFD_KEY_ALIAS`, and `FFD_KEY_PASSWORD`.
+
 The signed APK will be at `android/app/build/outputs/apk/release/app-release.apk`.
+Run `npm run validate` (or `npm run validate -- path/to/app.apk`) to check a release.
+
+### Publishing a release from GitHub
+
+The **Android Signed Release** workflow (`.github/workflows/release.yml`)
+builds, signs, validates, and publishes the APK to GitHub Releases. It reads
+the keystore from repository secrets (Settings → Secrets and variables →
+Actions): `FFD_KEYSTORE_BASE64` (the keystore, base64-encoded),
+`FFD_KEYSTORE_PASSWORD`, `FFD_KEY_ALIAS`, and `FFD_KEY_PASSWORD`. Bump the
+version in `package.json`, `android/app/build.gradle`, and the app footer,
+add `release-notes/v<version>.md`, then run the workflow from the Actions tab
+on `main`.
 
 ## Screenshots
 
-| Home | Case View | Feedback |
-|------|-----------|----------|
+Captured from v1.1.0 at Android phone size (360dp wide, 1080×2547 PNG).
+
+| Home | Case | Feedback |
+|------|------|----------|
 | ![Home](screenshots/01-home.png) | ![Case](screenshots/02-case.png) | ![Feedback](screenshots/03-feedback.png) |
 
-| Scoreboard | Results | How It Works |
-|------------|---------|--------------|
-| ![Scoreboard](screenshots/04-scoreboard.png) | ![Results](screenshots/05-results.png) | ![How](screenshots/06-how.png) |
+| Evidence: web page | Results | Privacy |
+|--------------------|---------|---------|
+| ![Website evidence](screenshots/04-evidence.png) | ![Results](screenshots/05-results.png) | ![Privacy](screenshots/06-privacy.png) |
 
 ## Disclaimer
 
